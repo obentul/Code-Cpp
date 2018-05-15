@@ -29,7 +29,17 @@ void swap(T &a,T &b)
 }
 
 
-/*模板函数在此处被不同参数类型调用了两次，在编译的时候会对应生成两个函数
+/*模板函数在此处被不同参数类型调用了两次，在编译的时候会对应生成两个函数：
  *1.   void swap(int &a,int &b)
  *2.   void swap(float &a,float &b)
+ * 
+ *使用objdump -t 1|grep swap查看符号表，可见如下：
+ *[root@localhost 函数模板]# objdump -t 1|grep swap
+ *00000000004006f0  w    F .text  000000000000002c              _Z4swapIfEvRT_S1_
+ *00000000004006c4  w    F .text  000000000000002c              _Z4swapIiEvRT_S1_
+ *确实是被扩展成了两个函数，并且看名字，发现其中有f和i字样，用以表明真实类型
+ *
+ *
+ *
+ *
  * */
