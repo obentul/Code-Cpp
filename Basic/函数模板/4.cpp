@@ -44,9 +44,8 @@ int main(int argc,char ** argv)
 	Swap(a,b);					//显示具体化，会使用显示具体化的函数逻辑
 	printf("a=%d,b=%d\n",a,b);
 
-	//template void Swap<char &>(char &,char &);	//显式实例化声明(注意,这里可以定义在函数内),会使用模板函数的逻辑
 	printf("c=%c,d=%c\n",c,d);
-	Swap<char>(c,d);
+	Swap<char>(c,d);				//显式实例化
 	printf("c=%c,d=%c\n",c,d);	
 
 	printf("e=%f,f=%f\n",e,f);
