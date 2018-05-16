@@ -1,48 +1,64 @@
-/*显示具体化(是一种函数模板，对应编译器做的“隐式具体化”)
+/* 一、显式具体化(是一种函数模板，对应编译器做的“隐式具体化”)
  * 前面介绍个函数的重载和函数的模板，现在做个小结：
  * 1.函数重载：通过改变函数列表的形式(返回值无影响)，达到多个函数实现公用一个函数名的目的
  * 2.函数模板：提供适用于多种入参的统一函数实现，达到多种入参类型公用一个函数逻辑的目的(入参格式不变)
  * 
  * 如果在使用函数模板的时候，对于多种入参，函数逻辑是一样的，在编译的时候会根据具体的被使用情况，具体化多个
  * 模板实例出来，比如 void func(int a,int b) , void func(int a[],int b[])  ,  void func(stu stu1,stu stu2)。(这的stu是结构体，C++使用结构体时可直接用结构体名)
- * 那么如果我想自己依据模板定义一个模板实例，这个实例的逻辑和模板不一样，那么该怎么做呢。这就是“显示具体化”，与之对应的就是在编译时自动生成的“隐式具体化”(见
- * 上面的三个func，都是隐式具体化)
+ * 那么如果我想自己依据模板定义一个模板实例，这个实例的逻辑和模板不一样，那么该怎么做呢。这就是“显示具体化”，与之对应的就是在编译时自动生成的“隐式实例化”(见
+ * 上面的三个func，都是隐式实例化)
  *
  * 直白点：针对当前模板，如果入参是某个参数类型，那就做和别的入参不一样的动作(显示具体化)
  *
  * 声明格式: template <> void Swap<int *>(int *a,int *b);        Swap后面的尖括号里面的内容就表示要特殊对待的入参类型
+ *
+ * 二、上面提到了“隐式实例化”，那么必然与之对应的“显式实例化”，那么现在来对比下  显式具体化 、隐式实例化 和 显式实例化 三者的异同：
+ *    1.显式具体化：已有模板，但不想改变函数名,又不想改入参列表（重载），那么可以通过显式具体化来声明一个特例；		  (函数逻辑一般和模板不一样，由先一起判断入参类型，就是想搞个特例，但是又想用现在的模板)
+ *    2.隐式实例化：创建模板后，编译器会根据调用模板时使用的入参类型，自动创建相应的模板实例；				  (函数逻辑和模板一样，由编译器判断入参类型，有点"编译器你帮我看着弄吧，我不管了的意思"，熟手用起来比较合适，新手用感觉不大靠谱)
+ *    3.显式实例化：创建模板后，不想让编译器帮助自己隐式创建实例，于是乎自己在调用函数的地方，手动指定传入参数的参数类型；(函数逻辑和模板一样，人为指定入参类型，比隐式实例化多一步，有点"我知道自己要什么，我就要自己指定的意思"，控制欲较强)
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * */
 
 
 #include <stdio.h>
 
 template <typename T>
-void Swap(T a,T b);
+void Swap(T &a,T &b);
 
-template <> void Swap<int *>(int *a,int *b);
-template <> void Swap<int &>(int &a,int &b);
+template <> void Swap<int>(int &a,int &b);	//显示具体化
 
 int main(int argc,char ** argv)
 {
-	int *p_a,*p_b;
 	int a=4,b=6;
-	p_a=&a;
-	p_b=&b;
+	char c='c',d='d';
+	float e=1.0,f=2.0;	
 
-	int &c=a;
-	int &d=b;
+	printf("a=%d,b=%d\n",a,b);
+	Swap(a,b);					//显示具体化，会使用显示具体化的函数逻辑
+	printf("a=%d,b=%d\n",a,b);
 
-	Swap(p_a,p_b);
-	
-	a=4;
-	b=6;
+	//template void Swap<char &>(char &,char &);	//显式实例化声明(注意,这里可以定义在函数内),会使用模板函数的逻辑
+	printf("c=%c,d=%c\n",c,d);
+	Swap<char>(c,d);
+	printf("c=%c,d=%c\n",c,d);	
 
-	Swap(c,d);		//调用此函数会跳转到模板中进行，这里需要弄明白为什么
+	printf("e=%f,f=%f\n",e,f);
+	Swap(e,f);					//隐式实例化
+	printf("e=%f,f=%f\n",e,f);
+
 }
 
 template <typename T>
-void Swap(T a,T b)	//模板
+void Swap(T &a,T &b)	//模板
 {
+	printf("muban hanshu\n");
 	T swap;
 
 	swap=a;
@@ -50,32 +66,17 @@ void Swap(T a,T b)	//模板
 	b=swap;
 }
 
-template <> void Swap<int *>(int *a,int *b)	//显示具体化1
+
+template <> void Swap<int>(int &a,int &b)	//显示具体化1
 {
-	printf("dosomething i want to do -------\n");
-
-
-	printf("template <> void Swap(int *a,int *b) before : a=%d,b=%d\n",*a,*b);
-	
-	int swap;
-	swap=*a;
-	*a=*b;
-	*b=swap;
-
-	printf("template <> void Swap(int *a,int *b) after : a=%d,b=%d\n",*a,*b);
-}
-
-template <> void Swap<int &>(int &a,int &b)	//显示具体化2
-{
-	printf("dosomething i want to do ++++++++\n");
+	printf("xianshi jutihua\n");
 
 	int swap;
-	printf("template <> void Swap(int &a,int &b) before : a=%d,b=%d\n",a,b);
 	swap=a;
 	a=b;
 	b=swap;
-	printf("template <> void Swap(int &a,int &b) after : a=%d,b=%d\n",a,b);
 }
+
 
 
 
