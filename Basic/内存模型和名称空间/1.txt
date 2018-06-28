@@ -91,7 +91,7 @@ C++标准允许每个编译器设计人员自定义名称符号表(symbol table)
 
 #6  -  既然有名称空间做约束，那么1.cpp和2.cpp中都有void func(int,int)时，链接时是否能通过呢?(在文件中对func做namespace约束)
 
-
+#7  -  
 
 
 
