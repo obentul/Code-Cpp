@@ -84,6 +84,16 @@ C++标准允许每个编译器设计人员自定义名称符号表(symbol table)
 	
 #4  -  可以给名称空间建别名，比如   namespace AB = a::b
        此时在访问c，就可以  AB::c
+		（这里的a和b都是名称空间，b在a内，属于嵌套结构：namespace a{
+								     int xxx;
+								        namespace b{
+									   int c;
+									}
+								     int yyy;
+								}
+		  为了使用方便，就把using namespace a:b:ccc  ,  简化成 using namespace AB:c
+
+		 ）
 
 #5  -  名称空间的定义:namespace{ }
        名称空间的使用:using namespace xxx;	     //using编译
@@ -91,7 +101,17 @@ C++标准允许每个编译器设计人员自定义名称符号表(symbol table)
 
 #6  -  既然有名称空间做约束，那么1.cpp和2.cpp中都有void func(int,int)时，链接时是否能通过呢?(在文件中对func做namespace约束)
 
-#7  -  
+#7  -  名称空间存在的意义：如果有lib1和lib2，且这两个lib里面都有方法get，在c里面，如果同时链接这两个库，就会导致符号表冲突，链接失败，解决办法只有重命名get的名字，
+       比如lib1_get,lib2_get。这就比较麻烦。在C++里面，可以通过为两个lib设置名称空间来解决，比如lib1设置名称空间lib1，lib2设置lib2，这样就不需要重新编译库文件，只要
+       在使用的时候如下:lib1:get  /  lib2:get
+
+#8  -  名称空间的使用作用域机制和变量作用域机制一样
+
+#9  -  名称空间的声明不能再代码块中，和结构体一样
+
+#10 -  名称空间可以嵌套，和结构体一样
+
+#11 -  可以把名称空间当做符号表，那么在使用的时候就需要提前,如果名称空间定义在.h文件中，那么需要include这个头文件(类比结构体)
 
 
 
