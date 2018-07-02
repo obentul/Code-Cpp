@@ -1,0 +1,16 @@
+1    -    子类不能直接访问基类的私有成员，必须通过基类的方法进行访问。例如构造函数不能直接赋值，而需要调用基类的构造函数来实现给成员变量的赋值。
+2    -    创建派生类对象时，程序首先调用基类构造函数，然后在调用派生类构造函数
+	  基类构造函数负责：初始化基类的成员变量
+	  派生类的构造函数负责：初始化新增的数据成员，如果不通过“初始化器列表语法”来指定基类构造函数，那么就使用默认基类构造函数
+
+(!!!)3   -   重点：如果不想用默认的基类构造函数，那么“必须”使用初始化器列表语法，语法规则如下：
+			子类::子类(int arg1,int arg2):基类(arg1,arg2)
+			{
+
+			}
+		      案例：
+			RatedPlayer::RatedPlayer(const string &firstname_, const string &lastname_, bool hasTable_, unsigned int rating_)
+				:TableTennisPlayer(firstname_,lastname_,hasTable_)
+			{
+				rating = rating_;
+			}
