@@ -1,0 +1,56 @@
+#1   ----   私有继承：从基类继承过来的"public 和 protected"方法和成员变量，全部转换为private的。
+			语法：    class student:private staff{
+				  }
+		注：1）其实默认情况下，就是private继承
+		    2）此时派生类赋值一套基类的成员(方法和变量)，然后无法访问基类的方法和变量
+
+
+#2   ----   公有继承：平时用的一般都是公有继承，和私有继承形成对比
+			语法：    class student:public staff{
+				  }
+		注：1）完全自由
+
+
+#3   ----   保护继承：从基类继承过来的”public 和 protected“方法和变量，都转换成procted的
+			语法：    class student:protected staff{
+				  }
+		注：1）可以访问基类的方法和变量(基类名:方法/变量  来访问)
+
+
+
+——————————————————————小结————————————————————————
+相当于做一次统一的向下约束，很好理解，”冒号“后面的修饰(private,public,procted)相当于把基类的所有成员约束一遍，把大范围约束小，小范围不动
+
+
+
+
+
+#4   ----   多重继承：
+			语法	  class student:private staff,private people{
+				  }
+
+            #4.1 多重继承的构造函数：(从定义来推导构造函数)
+			语法	  student::student(string xuehao_,string banji_,string name_,string sex_)
+					:staff(xuehao_,banji_),:people(name_,sex_) {xxx}
+		 小结：其实就相当于加一个"逗号"，然后再写一次"冒号"和类名
+
+
+            #4.2 多重继承的同名函数：如果staff和people中都有show函数，那么使用时，需要指定使用谁的show
+		 比如：staff.show()  ,  people:show()
+
+
+
+
+
+
+#5   ----    如果多重继承中，不同的基类采用不同的继承方式，那么会有什么效果呢？
+		结果：以何种方式继承基类，那么针对这个基类的特性，就使用何种限制。比如class student:private staff,public people,protected guys
+		      那么继承到的所有staff成员都是private的，所有people成员都是public的，所有guys成员都是protected的
+
+
+
+#6   ----    14.2.4 需要再理一理
+
+
+
+#7   ----    14.4类模板 
