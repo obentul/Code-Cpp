@@ -47,10 +47,5 @@
 		结果：以何种方式继承基类，那么针对这个基类的特性，就使用何种限制。比如class student:private staff,public people,protected guys
 		      那么继承到的所有staff成员都是private的，所有people成员都是public的，所有guys成员都是protected的
 
+#6   ----    
 
-
-#6   ----    14.2.4 需要再理一理
-
-
-
-#7   ----    14.4类模板 
