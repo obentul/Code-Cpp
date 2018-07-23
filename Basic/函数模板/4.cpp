@@ -66,7 +66,7 @@ void Swap(T &a,T &b)	//模板
 }
 
 
-template <> void Swap<int>(int &a,int &b)	//显示具体化1
+template <> void Swap<int>(int &a,int &b)	//显示定制化
 {
 	printf("xianshi jutihua\n");
 
