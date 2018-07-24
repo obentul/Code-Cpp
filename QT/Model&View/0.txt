@@ -1,0 +1,39 @@
+#1  ---  QAbstractItemModel是大多数模型类的基类，即Model的祖先，比如QAbstractListModel，QAbstractTreeModel，QAbstractTableModel都是继承自QAbstractItemModel
+	 QAbstractItemView 是大多数试图类的基类，即View的祖先， 比如QListView，QTreeView，QTableView都继承自QAbstractItemView
+	 QAbstractItemDelegate是所有Delegate的抽象基类，这个基类又有两个分支：QStyleItemDelegate和QItemDelegate。如果想自己实现一个Delegate，那么需要从这两个
+	 类中选择一个继承，一般选择QStyleItemDelegate。(这里就给Delegate定性了)
+
+		以上是针对QT c++编程时而言。那么在qml结合c++编程的场景下，该如何使用MVD模型呢：
+			1）M ，qml中有现成的ListModel、XmlListModel等可以使用
+			2）V ，qml中有ListView、TableView等可以使用
+			3）D ，使用Item，然后给一个id，在Item中定义想要元素(Button，Rectangle等)，然后赋值给V中的delegate即可
+
+		职责：M，提供数据，一般是c++编写，数据格式一般是json，xml等(应该也能提供excel，估计只要是格式化的数据，都OK)
+		      V，展示页整体布局，比如是列表布局(List)，还是表格布局(Table)，还是树状布局(Tree)
+		      D，展示也里面的内容，有几个Button，有几个Rectangle，每个元素张什么样等等。
+		关系：M传数据给D，D处理后给V赋值，V展示
+
+		一个简单的例子：通讯录中，M提供数据，V表明整体结构是列表状，D修饰列表中每一条的格式(字体，颜色等)
+
+
+		猜测：由于M和V，系统都提供同名的类(List,Tree,Table)，可以猜测QT对于这两块已经做了很好的互通，剩下的只要我们定义一下D的格式就好（还是很简单的）
+
+
+===============================================================================================================================================================================
+
+#2  ---	 ListView
+		要使用ListView，必须制定一个Model和一个Delegate。
+		
+		Model ，可以是qml的内建类型，比如ListModel，XmlListModel，也可以自己定义一个c++类，但是！！！必须从自QAbstractItemModel或自QAbstractListModel继承
+		Delegate ， 可以理解为自定义一个qml文件，然后最外层是Item，即Item{ ... }，里面有多少东西，自己决定
+
+		所以可以引申为 M(Model) V(View) I(Item)
+
+	(!!!)格式
+		ListView{
+
+			delegate:xxx
+			model:xxx
+		}
+
+
