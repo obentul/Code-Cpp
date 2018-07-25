@@ -30,12 +30,12 @@ Rectangle {
         Image { id: photoImage; anchors.centerIn: parent }
     }
 
-    states: State {                                         // states(可以理解为#define宏定义)
-        name: "selected"
+    states: State {                                         // states(快照，里面存放states父类，此例中为photo，的所有想要设置的属性值，以产生一个快照)
+        name: "selected"				    // 可以通过信号或者其他方式跳转至这个快照，以实现父类实例的状态快速切换
         PropertyChanges { target: border; color: "red" }
     }
 
-    transitions: Transition {                               // transitions
+    transitions: Transition {                               // transitions(配合states使用，因为直接在state间切换，会比较快速，是瞬时完成的，如果想要缓慢的切换，那么可以使用transitions)
         from: ""; to: "selected"
         ColorAnimation { target: border; duration: 200 }
     }
