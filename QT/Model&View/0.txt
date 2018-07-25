@@ -36,4 +36,185 @@
 			model:xxx
 		}
 
+===============================================================================================================================================================================
+
+#3  ---  Model提供数据的增删改查，以及数据的存储(module类同时提供处理和存储，像个微型数据库)，
+		
+
+比如ListModel的方法就有如下这些：
+		
+		append(jsobject dict)						//尾部追加（增）
+		clear()								
+		object get(int index)						//查
+		insert(int index, jsobject dict)				//插入（增）
+		move(int from, int to, int n)					//改
+		remove(int index, int count)					//删
+		set(int index, jsobject dict)					//改
+		setProperty(int index, string property, variant value)
+		sync() 								//commit提交
+
+TableModel没有可用的QML实例，只提供了QAbstractTableModel类，我们可以从这个类继承，然后实现其中的方法，进而把这个c++类通过registertype注入到QML环境中，并定义成一个QML类型来使用
+方法有：
+		
+enum LayoutChangeHint
+QAbstractTableModel(QObject *)
+~QAbstractTableModel()
+beginInsertColumns(const QModelIndex &, int , int )
+beginInsertRows(const QModelIndex &, int , int )
+beginMoveColumns(const QModelIndex &, int , int , const QModelIndex &, int ) : bool
+beginMoveRows(const QModelIndex &, int , int , const QModelIndex &, int ) : bool
+beginRemoveColumns(const QModelIndex &, int , int )
+beginRemoveRows(const QModelIndex &, int , int )
+beginResetModel()
+blockSignals(bool ) : bool
+buddy(const QModelIndex &) const : QModelIndex
+canDropMimeData(const QMimeData *, Qt::DropAction , int , int , const QModelIndex &) const : bool
+canFetchMore(const QModelIndex &) const : bool
+changePersistentIndex(const QModelIndex &, const QModelIndex &)
+changePersistentIndexList(const QModelIndexList &, const QModelIndexList &)
+childEvent(QChildEvent *)
+children() const : const QObjectList &
+columnCount(const QModelIndex &) const : int
+columnsAboutToBeInserted(const QModelIndex &, int , int )
+columnsAboutToBeMoved(const QModelIndex &, int , int , const QModelIndex &, int )
+columnsAboutToBeRemoved(const QModelIndex &, int , int )
+columnsInserted(const QModelIndex &, int , int )
+columnsMoved(const QModelIndex &, int , int , const QModelIndex &, int )
+columnsRemoved(const QModelIndex &, int , int )
+connect(const QObject *, const char *, const QObject *, const char *, Qt::ConnectionType ) : QMetaObject::Connection
+connect(const QObject *, const QMetaMethod &, const QObject *, const QMetaMethod &, Qt::ConnectionType ) : QMetaObject::Connection
+connect(const QObject *, const char *, const char *, Qt::ConnectionType ) const : QMetaObject::Connection
+connect(const QObject *, PointerToMemberFunction , const QObject *, PointerToMemberFunction , Qt::ConnectionType ) : QMetaObject::Connection
+connect(const QObject *, PointerToMemberFunction , Functor ) : QMetaObject::Connection
+connect(const QObject *, PointerToMemberFunction , const QObject *, Functor , Qt::ConnectionType ) : QMetaObject::Connection
+connectNotify(const QMetaMethod &)
+createIndex(int , int , void *) const : QModelIndex
+createIndex(int , int , quintptr ) const : QModelIndex
+customEvent(QEvent *)
+d_ptr : QScopedPointer<QObjectData>
+data(const QModelIndex &, int ) const : QVariant
+dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)
+deleteLater()
+destroyed(QObject *)
+disconnect(const QObject *, const char *, const QObject *, const char *) : bool
+disconnect(const QObject *, const QMetaMethod &, const QObject *, const QMetaMethod &) : bool
+disconnect(const char *, const QObject *, const char *) const : bool
+disconnect(const QObject *, const char *) const : bool
+disconnect(const QMetaObject::Connection &) : bool
+disconnect(const QObject *, PointerToMemberFunction , const QObject *, PointerToMemberFunction ) : bool
+disconnectNotify(const QMetaMethod &)
+dropMimeData(const QMimeData *, Qt::DropAction , int , int , const QModelIndex &) : bool
+dropMimeData(const QMimeData *, Qt::DropAction , int , int , const QModelIndex &) : bool
+dumpObjectInfo()
+dumpObjectTree()
+dynamicPropertyNames() const : QList<QByteArray>
+endInsertColumns()
+endInsertRows()
+endMoveColumns()
+endMoveRows()
+endRemoveColumns()
+endRemoveRows()
+endResetModel()
+event(QEvent *) : bool
+eventFilter(QObject *, QEvent *) : bool
+fetchMore(const QModelIndex &)
+findChild(const QString &, Qt::FindChildOptions ) const : T
+findChildren(const QString &, Qt::FindChildOptions ) const : QList<T>
+findChildren(const QRegExp &, Qt::FindChildOptions ) const : QList<T>
+findChildren(const QRegularExpression &, Qt::FindChildOptions ) const : QList<T>
+flags(const QModelIndex &) const : Qt::ItemFlags
+flags(const QModelIndex &) const : Qt::ItemFlags
+hasChildren(const QModelIndex &) const : bool
+hasIndex(int , int , const QModelIndex &) const : bool
+headerData(int , Qt::Orientation , int ) const : QVariant
+headerDataChanged(Qt::Orientation , int , int )
+index(int , int , const QModelIndex &) const : QModelIndex
+index(int , int , const QModelIndex &) const : QModelIndex
+inherits(const char *) const : bool
+insertColumn(int , const QModelIndex &) : bool
+insertColumns(int , int , const QModelIndex &) : bool
+insertRow(int , const QModelIndex &) : bool
+insertRows(int , int , const QModelIndex &) : bool
+installEventFilter(QObject *)
+isSignalConnected(const QMetaMethod &) const : bool
+isWidgetType() const : bool
+isWindowType() const : bool
+itemData(const QModelIndex &) const : QMap<int, QVariant>
+killTimer(int )
+layoutAboutToBeChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint )
+layoutChanged(const QList<QPersistentModelIndex> &, QAbstractItemModel::LayoutChangeHint )
+match(const QModelIndex &, int , const QVariant &, int , Qt::MatchFlags ) const : QModelIndexList
+metaObject() const : const QMetaObject *
+mimeData(const QModelIndexList &) const : QMimeData *
+mimeTypes() const : QStringList
+modelAboutToBeReset()
+modelReset()
+moveColumn(const QModelIndex &, int , const QModelIndex &, int ) : bool
+moveColumns(const QModelIndex &, int , int , const QModelIndex &, int ) : bool
+moveRow(const QModelIndex &, int , const QModelIndex &, int ) : bool
+moveRows(const QModelIndex &, int , int , const QModelIndex &, int ) : bool
+moveToThread(QThread *)
+objectName() const : QString
+objectNameChanged(const QString &)
+parent() const : QObject *
+parent(const QModelIndex &) const : QModelIndex
+persistentIndexList() const : QModelIndexList
+property(const char *) const : QVariant
+receivers(const char *) const : int
+removeColumn(int , const QModelIndex &) : bool
+removeColumns(int , int , const QModelIndex &) : bool
+removeEventFilter(QObject *)
+removeRow(int , const QModelIndex &) : bool
+removeRows(int , int , const QModelIndex &) : bool
+resetInternalData()
+revert()
+roleNames() const : QHash<int, QByteArray>
+rowCount(const QModelIndex &) const : int
+rowsAboutToBeInserted(const QModelIndex &, int , int )
+rowsAboutToBeMoved(const QModelIndex &, int , int , const QModelIndex &, int )
+rowsAboutToBeRemoved(const QModelIndex &, int , int )
+rowsInserted(const QModelIndex &, int , int )
+rowsMoved(const QModelIndex &, int , int , const QModelIndex &, int )
+rowsRemoved(const QModelIndex &, int , int )
+sender() const : QObject *
+senderSignalIndex() const : int
+setData(const QModelIndex &, const QVariant &, int ) : bool
+setHeaderData(int , Qt::Orientation , const QVariant &, int ) : bool
+setItemData(const QModelIndex &, const QMap<int, QVariant> &) : bool
+setObjectName(const QString &)
+setParent(QObject *)
+setProperty(const char *, const QVariant &) : bool
+sibling(int , int , const QModelIndex &) const : QModelIndex
+sibling(int , int , const QModelIndex &) const : QModelIndex
+signalsBlocked() const : bool
+sort(int , Qt::SortOrder )
+span(const QModelIndex &) const : QSize
+startTimer(int , Qt::TimerType ) : int
+staticMetaObject : const QMetaObject
+staticQtMetaObject : const QMetaObject
+submit() : bool
+supportedDragActions() const : Qt::DropActions
+supportedDropActions() const : Qt::DropActions
+thread() const : QThread *
+timerEvent(QTimerEvent *)
+tr(const char *, const char *, int ) : QString
+
+===============================================================================================================================================================================
+
+#4  ---  小结
+
+	在QML环境，肯定都是用QML类来处理的。
+	
+	model		负责数据的存储和提供对数据的操作方法
+	delegate	负责每一条数据的元素组成和元素格式
+	view		负责全部，包括表格样式，怎么使用model的方法来操作数据，从而展示数据。
+
+	view是核心，在view中会调用model和delegate，M和D只是V的元素
+
+===============================================================================================================================================================================
+
+
+
+
+
 
