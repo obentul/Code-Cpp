@@ -196,6 +196,24 @@
 
   
 
+#20  ---  一个qml文件中只能有一个跟节点，比如xxx.qml
+		Rectangle{
+		    id:r1
+		}
+		Rectangle{
+		    id:r2
+		}
+	  这样就不行，需要用一个Item(或者Item的子类)，或者Component或者其他可以作为根节点的类包裹，比如
+		Rectangle{
+		    id:rroot
+			Rectangle{
+    			    id:r1
+			}		
+			Rectangle{
+			    id:r2
+			}			
+		}
+
 
 
 

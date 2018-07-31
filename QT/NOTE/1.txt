@@ -1,0 +1,7 @@
+qmlRegisterType<MyWindow>("mywindow", 1,0, "MyQuickWindow");
+	<>：cpp类名，这里MyWindow就是类名(有mywindow.cpp，里面有class MyWindow)
+	P1：cpp文件路径
+	P2P3：版本
+	P4：QML类名，这里就是在QML中使用MyWindow时使用的类型名
+	
+=======================================================================================================================================

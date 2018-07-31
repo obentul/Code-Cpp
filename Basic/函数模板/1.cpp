@@ -16,6 +16,12 @@ int main(int argc,char ** argv)
 	swap(c,d);
 	printf("after swap,c=%f,d=%f\n",c,d);
 
+	//下面的内容编译不通过，在一个模板函数中，两个参数的类型必须一致，比如模板中都是T，那么这里也应该一致，都是int，或者都是float
+//	printf("before swap,a=%f,c=%f\n",a,c);
+//	swap(a,c);
+//	printf("before swap,a=%f,c=%f\n",a,c);
+
+
 }
 
 template <typename T>//申明和定义都要添加此行
