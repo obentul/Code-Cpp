@@ -98,7 +98,7 @@ C++标准允许每个编译器设计人员自定义名称符号表(symbol table)
 #5  -  名称空间的定义:namespace{ }
        名称空间的使用:using namespace xxx;	     //using编译
        名称空间的使用:using namespace xxx:func;      //using声明
-
+		
 #6  -  既然有名称空间做约束，那么1.cpp和2.cpp中都有void func(int,int)时，链接时是否能通过呢?(在文件中对func做namespace约束)
 
 #7  -  名称空间存在的意义：如果有lib1和lib2，且这两个lib里面都有方法get，在c里面，如果同时链接这两个库，就会导致符号表冲突，链接失败，解决办法只有重命名get的名字，
