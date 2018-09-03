@@ -1,9 +1,0 @@
-qmlRegisterType<MyWindow>("mywindow", 1,0, "MyQuickWindow");
-	<>：cpp类名，这里MyWindow就是类名(有mywindow.cpp，里面有class MyWindow)
-	P1：后面的qml文件在使用时，需要指明注册包的名字
-	P2P3：版本
-	P4：QML类名，这里就是在QML中使用MyWindow时使用的类型名
-	
-
-比如上面个，如果想在某个文件中使用MyWindow类，需要在文件的头部，import mywindow 1.0
-=======================================================================================================================================
