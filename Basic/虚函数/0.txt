@@ -1,0 +1,139 @@
+概括：
+1.虚函数是用在继承和多态场景下的，离开继承和多态场景，虚函数没意义(同一个方法func，在父子类中进行不同的实现)
+2.联想java中的super关键字，java使用这个关键字来调用其父类的同名函数的实现
+(*)3.什么是多态？？？  
+	 关键点就在————只使用基类的指针，就能完成对基类和子类同名方法的随意调用
+	 离开"只使用基类指针"这个大前提来谈多态，就是在“扯淡”
+
+
+
+虚函数联系到多态，多态联系到继承。所以本文中都是在继承层次上做文章。没了继承，什么都没得谈。
+下面是对C++的虚函数这玩意儿的理解。
+一， 什么是虚函数（如果不知道虚函数为何物，但有急切的想知道，那你就应该从这里开始）
+简单地说，那些被virtual关键字修饰的成员函数，就是虚函数。虚函数的作用，用专业术语来解释就是实现多态性（Polymorphism），多态性是将接口与实现进行分离；用形象的语言来解释就是实现以共同的方法，但因个体差异而采用不同的策略。下面来看一段简单的代码
+class A{
+public:
+void print(){ cout<<”This is A”<<endl;}
+};
+class B:public A{
+public:
+void print(){ cout<<”This is B”<<endl;}
+};
+int main(){ //为了在以后便于区分，我这段main()代码叫做main1
+A a;
+B b;
+a.print();
+b.print();
+}
+通过class A和class B的print()这个接口，可以看出这两个class因个体的差异而采用了不同的策略，输出的结果也是我们预料中的，分别是This is A和This is B。但这是否真正做到了多态性呢？No，多态还有个关键之处就是一切用指向基类的指针或引用来操作对象。那现在就把main()处的代码改一改。
+int main(){ //main2
+A a;
+B b;
+A* p1=&a;
+A* p2=&b;
+p1->print();
+p2->print();
+}
+运行一下看看结果，哟呵，蓦然回首，结果却是两个This is A。问题来了，p2明明指向的是class B的对象但却是调用的class A的print()函数，这不是我们所期望的结果，那么解决这个问题就需要用到虚函数
+class A{
+public:
+virtual void print(){ cout<<”This is A”<<endl;} //现在成了虚函数了
+};
+class B:public A{
+public:
+void print(){ cout<<”This is B”<<endl;} //这里需要在前面加上关键字virtual吗？
+};
+毫无疑问，class A的成员函数print()已经成了虚函数，那么class B的print()成了虚函数了吗？回答是Yes，我们只需在把基类的成员函数设为virtual，其派生类的相应的函数也会自动变为虚函数。所以，class B的print()也成了虚函数。那么对于在派生类的相应函数前是否需要用virtual关键字修饰，那就是你自己的问题了。
+现在重新运行main2的代码，这样输出的结果就是This is A和This is B了。
+现在来消化一下，我作个简单的总结，指向基类的指针在操作它的多态类对象时，会根据不同的类对象，调用其相应的函数，这个函数就是虚函数。
+二， 虚函数是如何做到的（如果你没有看过《Inside The C++ Object Model》这本书，但又急切想知道，那你就应该从这里开始）
+虚函数是如何做到因对象的不同而调用其相应的函数的呢？现在我们就来剖析虚函数。我们先定义两个类
+class A{ //虚函数示例代码
+public:
+virtual void fun(){cout<<1<<endl;}
+virtual void fun2(){cout<<2<<endl;}
+};
+class B:public A{
+public:
+void fun(){cout<<3<<endl;}
+void fun2(){cout<<4<<endl;}
+};
+由于这两个类中有虚函数存在，所以编译器就会为他们两个分别插入一段你不知道的数据，并为他们分别创建一个表。那段数据叫做vptr指针，指向那个表。那个表叫做vtbl，每个类都有自己的vtbl，vtbl的作用就是保存自己类中虚函数的地址，我们可以把vtbl形象地看成一个数组，这个数组的每个元素存放的就是虚函数的地址，请看图
+通过上图，可以看到这两个vtbl分别为class A和class B服务。现在有了这个模型之后，我们来分析下面的代码
+A *p=new A;
+p->fun();
+毫无疑问，调用了A::fun()，但是A::fun()是如何被调用的呢？它像普通函数那样直接跳转到函数的代码处吗？No，其实是这样的，首先是取出vptr的值，这个值就是vtbl的地址，再根据这个值来到vtbl这里，由于调用的函数A::fun()是第一个虚函数，所以取出vtbl第一个slot里的值，这个值就是A::fun()的地址了，最后调用这个函数。现在我们可以看出来了，只要vptr不同，指向的vtbl就不同，而不同的vtbl里装着对应类的虚函数地址，所以这样虚函数就可以完成它的任务。
+而对于class A和class B来说，他们的vptr指针存放在何处呢？其实这个指针就放在他们各自的实例对象里。由于class A和class B都没有数据成员，所以他们的实例对象里就只有一个vptr指针。通过上面的分析，现在我们来实作一段代码，来描述这个带有虚函数的类的简单模型。
+#include<iostream>
+using namespace std;
+//将上面“虚函数示例代码”添加在这里
+int main(){
+void (*fun)(A*);
+A *p=new B;
+long lVptrAddr;
+memcpy(&lVptrAddr,p,4);
+memcpy(&fun,reinterpret_cast<long*>(lVptrAddr),4);
+fun(p);
+delete p;
+system("pause");
+}
+用VC或Dev-C++编译运行一下，看看结果是不是输出3，如果不是，那么太阳明天肯定是从西边出来。现在一步一步开始分析
+void (*fun)(A*); 这段定义了一个函数指针名字叫做fun，而且有一个A*类型的参数，这个函数指针待会儿用来保存从vtbl里取出的函数地址
+A* p=new B; 这个我不太了解，算了，不解释这个了
+long lVptrAddr; 这个long类型的变量待会儿用来保存vptr的值
+memcpy(&lVptrAddr,p,4); 前面说了，他们的实例对象里只有vptr指针，所以我们就放心大胆地把p所指的4bytes内存里的东西复制到lVptrAddr中，所以复制出来的4bytes内容就是vptr的值，即vtbl的地址
+现在有了vtbl的地址了，那么我们现在就取出vtbl第一个slot里的内容
+memcpy(&fun,reinterpret_cast<long*>(lVptrAddr),4); 取出vtbl第一个slot里的内容，并存放在函数指针fun里。需要注意的是lVptrAddr里面是vtbl的地址，但lVptrAddr不是指针，所以我们要把它先转变成指针类型
+fun(p); 这里就调用了刚才取出的函数地址里的函数，也就是调用了B::fun()这个函数，也许你发现了为什么会有参数p,其实类成员函数调用时，会有个this指针，这个p就是那个this指针，只是在一般的调用中编译器自动帮你处理了而已，而在这里则需要自己处理。
+delete p;和system("pause"); 这个我不太了解，算了，不解释这个了
+如果调用B::fun2()怎么办？那就取出vtbl的第二个slot里的值就行了
+memcpy(&fun,reinterpret_cast<long*>(lVptrAddr+4),4); 为什么是加4呢？因为一个指针的长度是4bytes，所以加4。或者memcpy(&fun,reinterpret_cast<long*>(lVptrAddr)+1,4); 这更符合数组的用法，因为lVptrAddr被转成了long*型别，所以+1就是往后移sizeof(long)的长度
+三， 以一段代码开始
+#include<iostream>
+using namespace std;
+class A{ //虚函数示例代码2
+public:
+virtual void fun(){ cout<<"A::fun"<<endl;}
+virtual void fun2(){cout<<"A::fun2"<<endl;}
+};
+class B:public A{
+public:
+void fun(){ cout<<"B::fun"<<endl;}
+void fun2(){ cout<<"B::fun2"<<endl;}
+}; //end//虚函数示例代码2
+int main(){
+void (A::*fun)(); //定义一个函数指针
+A *p=new B;
+fun=&A::fun;
+(p->*fun)();
+fun = &A::fun2;
+(p->*fun)();
+delete p;
+system("pause");
+}
+你能估算出输出结果吗？如果你估算出的结果是A::fun和A::fun2，呵呵，恭喜恭喜，你中圈套了。其实真正的结果是B::fun和B::fun2，如果你想不通就接着往下看。给个提示，&A::fun和&A::fun2是真正获得了虚函数的地址吗？
+首先我们回到第二部分，通过段实作代码，得到一个“通用”的获得虚函数地址的方法
+#include<iostream>
+using namespace std;
+//将上面“虚函数示例代码2”添加在这里
+void CallVirtualFun(void* pThis,int index=0){
+void (*funptr)(void*);
+long lVptrAddr;
+memcpy(&lVptrAddr,pThis,4);
+memcpy(&funptr,reinterpret_cast<long*>(lVptrAddr)+index,4);
+funptr(pThis); //调用
+}
+int main(){
+A* p=new B;
+CallVirtualFun(p); //调用虚函数p->fun()
+CallVirtualFun(p,1);//调用虚函数p->fun2()
+system("pause");
+}
+现在我们拥有一个“通用”的CallVirtualFun方法。
+这个通用方法和第三部分开始处的代码有何联系呢？联系很大。由于A::fun()和A::fun2()是虚函数，所以&A::fun和&A::fun2获得的不是函数的地址，而是一段间接获得虚函数地址的一段代码的地址，我们形象地把这段代码看作那段CallVirtualFun。编译器在编译时，会提供类似于CallVirtualFun这样的代码，当你调用虚函数时，其实就是先调用的那段类似CallVirtualFun的代码，通过这段代码，获得虚函数地址后，最后调用虚函数，这样就真正保证了多态性。同时大家都说虚函数的效率低，其原因就是，在调用虚函数之前，还调用了获得虚函数地址的代码。
+最后的说明：本文的代码可以用VC6和Dev-C++4.9.8.0通过编译，且运行无问题。其他的编译器小弟不敢保证。其中，里面的类比方法只能看成模型，因为不同的编译器的低层实现是不同的。例如this指针，Dev-C++的gcc就是通过压栈，当作参数传递，而VC的编译器则通过取出地址保存在ecx中。所以这些类比方法不能当作具体实现
+
+
+
+
+
