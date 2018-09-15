@@ -1,0 +1,6 @@
+1.File -> Symbol File Path -> 选择pdb文件存放路径
+2.File -> Image File Path -> 选择exe文件存放路径
+3.File -> Open Crash Dump -> 选择DMP文件存放路径
+4.最后会弹出WinDbg对崩溃文件的初步分析的结果，在下面的输入框中输入“!analyze -v”
+
+更多见  WORK-JOURNAL/MiniFile.dmp windbg
