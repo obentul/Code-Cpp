@@ -1,0 +1,30 @@
+
+
+//在 构造函数初始化列表时，找到相应的实例，给其赋值，这就像初始化赋初值一样
+//没什么特殊的
+ChatMessageInfo::ChatMessageInfo(int messageID, MMediaInfo *parent):
+    QObject(parent)
+
+
+
+void ChatMessageInfo::updateMessageInfo(ChatMessageInfo* data)
+{
+    const MMediaInfo* pParent = getParent();
+    if (pParent)
+    {
+        if(data!=NULL){
+            MDCCommand* pmdc = MDCCommand::getFirstMDCCommand();
+    QString ip = pmdc->dpsIp();
+            DatabaseHelper* itemInfoPrivate = DatabaseHelper::createDatabaseHelper();
+            if (itemInfoPrivate && m_bDBInit)
+            {
+                itemInfoPrivate->creatMemberTable("k"+ ip.replace(".","")+pParent->uid().replace("-",""));
+                QString tablename = "k" + ip.replace(".","")+ pmdc->userName() + "List";
+                itemInfoPrivate->insertMember(tablename, pParent->uid(), pParent->name(), pParent->utype());
+                m_bDBInit = false;
+            }
+            itemInfoPrivate->updateData("k"+ ip.replace(".","")+pParent->uid().replace("-",""), data);
+        }
+    }
+
+}
