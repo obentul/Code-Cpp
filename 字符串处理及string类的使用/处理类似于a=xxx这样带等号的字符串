@@ -1,0 +1,41 @@
+#include "stdafx.h"
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+static void mytrim(string &s)	//去除空格
+{
+	int index = 0;
+	if (!s.empty())
+	{
+		while ((index = s.find(' ', index)) != string::npos)
+		{
+			s.erase(index, 1);
+		}
+	}
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+
+	string s = "slot=2";
+	mytrim(s);
+	int locs = s.find("=") + 1;
+	string ss = s.substr(locs, s.length() - 4);		//这里的4为 等号及其左边字符串的长度 - 1
+
+	printf("ss = %s\n",ss.c_str());
+	int i_ss = atoi(ss.c_str());
+	printf("i_ss = %d\n", i_ss);
+
+	string xx;
+	cin >> xx;
+
+	return 0;
+}
+
+
+
+
+结果是 ss = 2
+       i_ss = 2

@@ -1,0 +1,36 @@
+删除所有空格
+
+void trim(string &s)
+{
+    /*
+    if( !s.empty() )
+    {
+        s.erase(0,s.find_first_not_of(" "));
+        s.erase(s.find_last_not_of(" ") + 1);
+    }
+    */
+    int index = 0;
+    if( !s.empty())
+    {
+        while( (index = s.find(' ',index)) != string::npos)
+        {
+            s.erase(index,1);
+        }
+    }
+
+}
+
+
+
+删除首尾空格
+
+void trim(string &s)
+{
+
+    if( !s.empty() )
+    {
+        s.erase(0,s.find_first_not_of(" "));
+        s.erase(s.find_last_not_of(" ") + 1);
+    }
+
+}
