@@ -1,0 +1,26 @@
+string a = "123";
+a = a+'\x00'+"456";
+char *b = a.c_str();
+char *c = a.data();
+
+	for (int i = 0; i != s_len; i++)
+	{
+		printf("%02x,", b[i]);
+	}
+
+	printf("\n");
+
+	for (int j = 0; j != s_len; j++)
+	{
+		printf("%02x,", c[j]);
+	}
+
+
+
+输出：00 31 00 32 00 33
+      00 31 00 32 00 33 00 00 34 00 35 00 36
+
+
+注：c_str函数找到00就结束
+    data返回全内容
+
