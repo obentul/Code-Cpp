@@ -1,0 +1,13 @@
+常量成员函数是指 ： 此成员函数不会修改成员变量。
+
+使用：     myfunc() const{
+		m_common++;	//error
+		m_special++;	//ok
+	   }
+
+如果定义了myfunc这样的常量成员函数，但是又想对某个成员变量 m_special 进行修改，怎么办？
+
+可以对m_special使用mutable来修饰
+private:
+	mutable int  m_special;		//可以被myfunc修改
+	int m_common;			//不会被myfunc修改
