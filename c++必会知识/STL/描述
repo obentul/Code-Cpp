@@ -1,0 +1,11 @@
+STL的三大组件：容器 算法 迭代器
+
+容器：map list vector等等这些存储数据的数据结构统称为容器 
+
+	 STL定义的标准容器有8种 : string vector deque list forward_list queue priority_queue stack
+         具体见：https://blog.csdn.net/yuleidnf/article/details/81541736
+
+算法：容器的操作函数都是算法的具体表现
+
+
+迭代器：访问容器中元素的东西

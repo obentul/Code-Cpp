@@ -1,0 +1,24 @@
+c语言风格的强制类型转换在c++中不适用
+
+c++中使用如下四种强制类型转换：
+1）删除被转换参数的const修饰符
+	Person *yk  = const_cast<Person *>(getPerson());		//这里getPerson()会返回一个const Person *
+
+2）将 基类指针 转换成 子类的指针
+	Shape *sp = new Circle();
+	Circle *cp = static_const<Circle *>(sp);			//这也叫做向下转型
+
+   如果想在 向下转型的同时把const，那么就把const_cast 和 static_cast结合起来使用：
+	const Shape *getShape(){...}
+	Circle *cp = static_cast<Circle *>(const_cast<Shape *>(getShape()));
+
+3）reinterpret_cast,按照bit来对待对象，这个比较底层，一般用不到
+
+4）将 基类指针 转换成 子类的指针(仅对包含虚函数的基类有效)
+	Shape *sp = new Circle();			
+	Circle *cp = dynamic_cast<Circle *>(sp);		//这里要求Shape类必须有虚函数
+	
+	PS:dynamic_cast的另外一个用法是对引用类型做向下转型
+		const Circle &rc = dynamic_cast<const Circle &>(*getNextShape());
+
+   dynamic_cast 一般不常使用，因为其公认是"安全的"，所以被滥用的情况比较多
