@@ -4,3 +4,6 @@
 4.最后会弹出WinDbg对崩溃文件的初步分析的结果，在下面的输入框中输入“!analyze -v”
 
 更多见  WORK-JOURNAL/MiniFile.dmp windbg
+
+
+https://blog.csdn.net/liaozhilong88/article/details/80591792

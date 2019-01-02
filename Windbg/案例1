@@ -1,0 +1,672 @@
+
+Microsoft (R) Windows Debugger Version 6.12.0002.633 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+Loading Dump File [C:\Users\0216001048\Desktop\1\MiniFile.dmp]
+User Mini Dump File: Only registers, stack and portions of memory are available
+
+Symbol search path is: C:\Program Files (x86)\PD200;C:\Users\0216001048\Desktop\1
+Executable search path is: C:\Users\0216001048\Desktop\1
+Windows 7 Version 7601 (Service Pack 1) MP (4 procs) Free x86 compatible
+Product: WinNt, suite: SingleUserTS
+Machine Name:
+Debug session time: Sat Dec 29 14:12:26.000 2018 (UTC + 8:00)
+System Uptime: not available
+Process Uptime: 0 days 4:15:21.000
+................................................................
+................................................................
+......................................................
+This dump file has an exception of interest stored in it.
+The stored exception information can be accessed via .ecxr.
+(23c4.34f0): Access violation - code c0000005 (first/second chance not available)
+eax=00000087 ebx=1e662480 ecx=1e6607e8 edx=00188278 esi=1e662440 edi=001885b0
+eip=77266c04 esp=00188270 ebp=00188280 iopl=0         nv up ei pl zr na pe nc
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000246
+Unable to load image C:\Windows\System32\ntdll.dll, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for ntdll.dll
+*** ERROR: Module load completed but symbols could not be loaded for ntdll.dll
+ntdll+0x46c04:
+77266c04 c3              ret
+0:000> !analyze -v
+*******************************************************************************
+*                                                                             *
+*                        Exception Analysis                                   *
+*                                                                             *
+*******************************************************************************
+
+***** OS symbols are WRONG. Please fix symbols to do analysis.
+
+Unable to load image C:\Windows\System32\kernel32.dll, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for kernel32.dll
+*** ERROR: Module load completed but symbols could not be loaded for kernel32.dll
+Unable to load image C:\Windows\System32\ieframe.dll, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for ieframe.dll
+*** ERROR: Module load completed but symbols could not be loaded for ieframe.dll
+Unable to load image C:\Windows\System32\ole32.dll, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for ole32.dll
+*** ERROR: Module load completed but symbols could not be loaded for ole32.dll
+*** WARNING: Unable to verify timestamp for winhadnt.dll
+*** ERROR: Module load completed but symbols could not be loaded for winhadnt.dll
+*** WARNING: Unable to verify timestamp for user32.dll
+*** ERROR: Module load completed but symbols could not be loaded for user32.dll
+*** WARNING: Unable to verify timestamp for nvoglv32.dll
+*** ERROR: Module load completed but symbols could not be loaded for nvoglv32.dll
+*** WARNING: Unable to verify timestamp for SogouPY.ime
+*** ERROR: Module load completed but symbols could not be loaded for SogouPY.ime
+*** WARNING: Unable to verify timestamp for PolMgr.dll
+*** ERROR: Module load completed but symbols could not be loaded for PolMgr.dll
+*** WARNING: Unable to verify checksum for Qt5Quick.dll
+*** ERROR: Symbol file could not be found.  Defaulted to export symbols for Qt5Quick.dll - 
+*** WARNING: Unable to verify checksum for Qt5Widgets.dll
+*** ERROR: Symbol file could not be found.  Defaulted to export symbols for Qt5Widgets.dll - 
+Unable to load image C:\Windows\System32\mswsock.dll, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for mswsock.dll
+*** ERROR: Module load completed but symbols could not be loaded for mswsock.dll
+*** WARNING: Unable to verify timestamp for ws2_32.dll
+*** ERROR: Module load completed but symbols could not be loaded for ws2_32.dll
+*** WARNING: Unable to verify checksum for PD200Client.dll
+*** WARNING: Unable to verify timestamp for msvcr120.dll
+*** ERROR: Module load completed but symbols could not be loaded for msvcr120.dll
+*** WARNING: Unable to verify timestamp for dsound.dll
+*** ERROR: Module load completed but symbols could not be loaded for dsound.dll
+*** WARNING: Unable to verify timestamp for wdmaud.drv
+*** ERROR: Module load completed but symbols could not be loaded for wdmaud.drv
+*** WARNING: Unable to verify timestamp for winmm.dll
+*** ERROR: Module load completed but symbols could not be loaded for winmm.dll
+*** WARNING: Unable to verify timestamp for TSafeDoc2.dll
+*** ERROR: Module load completed but symbols could not be loaded for TSafeDoc2.dll
+Failed calling InternetOpenUrl, GLE=12002
+
+FAULTING_IP: 
+Qt5Core!QString::QString+18
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax
+
+EXCEPTION_RECORD:  ffffffff -- (.exr 0xffffffffffffffff)
+ExceptionAddress: 56d1b9c8 (Qt5Core!QString::QString+0x00000018)
+   ExceptionCode: c0000005 (Access violation)
+  ExceptionFlags: 00000000
+NumberParameters: 2
+   Parameter[0]: 00000001
+   Parameter[1]: 00430020
+Attempt to write to address 00430020
+
+PROCESS_NAME:  PD200.exe
+
+ADDITIONAL_DEBUG_TEXT:  
+Use '!findthebuild' command to search for the target build information.
+If the build information is available, run '!findthebuild -s ; .reload' to set symbol path and load symbols.
+
+MODULE_NAME: Qt5Core
+
+FAULTING_MODULE: 77220000 ntdll
+
+DEBUG_FLR_IMAGE_TIMESTAMP:  57e77591
+
+ERROR_CODE: (NTSTATUS) 0xc0000005 - 0x%08lx
+
+EXCEPTION_CODE: (NTSTATUS) 0xc0000005 - 0x%08lx
+
+EXCEPTION_PARAMETER1:  00000001
+
+EXCEPTION_PARAMETER2:  00430020
+
+WRITE_ADDRESS:  00430020 
+
+FOLLOWUP_IP: 
+Qt5Core!QString::QString+18
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax
+
+MOD_LIST: <ANALYSIS/>
+
+FAULTING_THREAD:  000034f0
+
+BUGCHECK_STR:  APPLICATION_FAULT_STRING_DEREFERENCE_INVALID_POINTER_WRITE_WRONG_SYMBOLS
+
+PRIMARY_PROBLEM_CLASS:  STRING_DEREFERENCE
+
+DEFAULT_BUCKET_ID:  STRING_DEREFERENCE
+
+LAST_CONTROL_TRANSFER:  from 003aee7d to 56d1b9c8
+
+STACK_TEXT:  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d 00189234 00430020 006e0061 Qt5Core!QString::QString+0x18
+00189270 00354da1 994731d4 00000000 0000002a PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 0b9154f8 00000000 0000002a PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 00000000 0000002f 0018931c PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 00000000 00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+
+
+STACK_COMMAND:  ~0s; .ecxr ; kb
+
+SYMBOL_STACK_INDEX:  0
+
+SYMBOL_NAME:  qt5core!QString::QString+18
+
+FOLLOWUP_NAME:  MachineOwner
+
+IMAGE_NAME:  Qt5Core.dll
+
+BUCKET_ID:  WRONG_SYMBOLS
+
+FAILURE_BUCKET_ID:  STRING_DEREFERENCE_c0000005_Qt5Core.dll!QString::QString
+
+WATSON_STAGEONE_URL:  http://watson.microsoft.com/StageOne/PD200_exe/0_0_0_0/5c233a3f/Qt5Core_dll/5_6_2_0/57e77591/c0000005/0002b9c8.htm?Retriage=1
+
+Followup: MachineOwner
+---------
+
+0:000> k
+ChildEBP RetAddr  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00188280 00000000 ntdll+0x46c04
+Verbose mode ON.
+0:000> !sym
+!sym <noisy/quiet - prompts/prompts off> - quiet mode - symbol prompts on
+0:000> !analyze -hang
+*******************************************************************************
+*                                                                             *
+*                        Exception Analysis                                   *
+*                                                                             *
+*******************************************************************************
+
+Use !analyze -v to get detailed debugging information.
+
+***** OS symbols are WRONG. Please fix symbols to do analysis.
+
+GGetPageUrlData failed, server returned HTTP status 502
+URL requested: http://watson.microsoft.com/0002b9c8.htm?Retriage=1
+Probably caused by : ntdll.dll ( ntdll+46c04 )
+
+Followup: MachineOwner
+---------
+
+0:000> !analyze -v
+*******************************************************************************
+*                                                                             *
+*                        Exception Analysis                                   *
+*                                                                             *
+*******************************************************************************
+
+***** OS symbols are WRONG. Please fix symbols to do analysis.
+
+GetPageUrlData failed, server returned HTTP status 502
+URL requested: http://watson.microsoft.com/StageOne/PD200_exe/0_0_0_0/5c233a3f/Qt5Core_dll/5_6_2_0/57e77591/c0000005/0002b9c8.htm?Retriage=1
+
+FAULTING_IP: 
+Qt5Core!QString::QString+18
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax
+
+EXCEPTION_RECORD:  ffffffff -- (.exr 0xffffffffffffffff)
+ExceptionAddress: 56d1b9c8 (Qt5Core!QString::QString+0x00000018)
+   ExceptionCode: c0000005 (Access violation)
+  ExceptionFlags: 00000000
+NumberParameters: 2
+   Parameter[0]: 00000001
+   Parameter[1]: 00430020
+Attempt to write to address 00430020
+
+PROCESS_NAME:  PD200.exe
+
+ADDITIONAL_DEBUG_TEXT:  
+Use '!findthebuild' command to search for the target build information.
+If the build information is available, run '!findthebuild -s ; .reload' to set symbol path and load symbols.
+
+MODULE_NAME: Qt5Core
+
+FAULTING_MODULE: 77220000 ntdll
+
+DEBUG_FLR_IMAGE_TIMESTAMP:  57e77591
+
+ERROR_CODE: (NTSTATUS) 0xc0000005 - 0x%08lx
+
+EXCEPTION_CODE: (NTSTATUS) 0xc0000005 - 0x%08lx
+
+EXCEPTION_PARAMETER1:  00000001
+
+EXCEPTION_PARAMETER2:  00430020
+
+WRITE_ADDRESS:  00430020 
+
+FOLLOWUP_IP: 
+Qt5Core!QString::QString+18
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax
+
+MOD_LIST: <ANALYSIS/>
+
+FAULTING_THREAD:  000034f0
+
+BUGCHECK_STR:  APPLICATION_FAULT_STRING_DEREFERENCE_INVALID_POINTER_WRITE_WRONG_SYMBOLS
+
+PRIMARY_PROBLEM_CLASS:  STRING_DEREFERENCE
+
+DEFAULT_BUCKET_ID:  STRING_DEREFERENCE
+
+LAST_CONTROL_TRANSFER:  from 003aee7d to 56d1b9c8
+
+STACK_TEXT:  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d 00189234 00430020 006e0061 Qt5Core!QString::QString+0x18
+00189270 00354da1 994731d4 00000000 0000002a PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 0b9154f8 00000000 0000002a PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 00000000 0000002f 0018931c PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 00000000 00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+
+
+STACK_COMMAND:  ~0s; .ecxr ; kb
+
+SYMBOL_STACK_INDEX:  0
+
+SYMBOL_NAME:  qt5core!QString::QString+18
+
+FOLLOWUP_NAME:  MachineOwner
+
+IMAGE_NAME:  Qt5Core.dll
+
+BUCKET_ID:  WRONG_SYMBOLS
+
+FAILURE_BUCKET_ID:  STRING_DEREFERENCE_c0000005_Qt5Core.dll!QString::QString
+
+WATSON_STAGEONE_URL:  http://watson.microsoft.com/StageOne/PD200_exe/0_0_0_0/5c233a3f/Qt5Core_dll/5_6_2_0/57e77591/c0000005/0002b9c8.htm?Retriage=1
+
+Followup: MachineOwner
+---------
+
+0:000> !analyze -hang
+*******************************************************************************
+*                                                                             *
+*                        Exception Analysis                                   *
+*                                                                             *
+*******************************************************************************
+
+Use !analyze -v to get detailed debugging information.
+
+***** OS symbols are WRONG. Please fix symbols to do analysis.
+
+GetPageUrlData failed, server returned HTTP status 502
+URL requested: http://watson.microsoft.com/0002b9c8.htm?Retriage=1
+Probably caused by : ntdll.dll ( ntdll+46c04 )
+
+Followup: MachineOwner
+---------
+
+0:000> !analyze -f 
+*******************************************************************************
+*                                                                             *
+*                        Exception Analysis                                   *
+*                                                                             *
+*******************************************************************************
+
+Use !analyze -v to get detailed debugging information.
+
+***** OS symbols are WRONG. Please fix symbols to do analysis.
+
+GetPageUrlData failed, server returned HTTP status 502
+URL requested: http://watson.microsoft.com/StageOne/PD200_exe/0_0_0_0/5c233a3f/Qt5Core_dll/5_6_2_0/57e77591/c0000005/0002b9c8.htm?Retriage=1
+Probably caused by : Qt5Core.dll ( qt5core!QString::QString+18 )
+
+Followup: MachineOwner
+---------
+
+0:000> ~
+.  0  Id: 23c4.34f0 Suspend: 0 Teb: 7ffdf000 Unfrozen
+   1  Id: 23c4.383c Suspend: 0 Teb: 7ffde000 Unfrozen
+   2  Id: 23c4.1a90 Suspend: 0 Teb: 7ffdd000 Unfrozen
+   3  Id: 23c4.3ea8 Suspend: 0 Teb: 7ffdb000 Unfrozen
+   4  Id: 23c4.31b4 Suspend: 0 Teb: 7ffda000 Unfrozen
+   5  Id: 23c4.2870 Suspend: 0 Teb: 7ffd6000 Unfrozen
+   6  Id: 23c4.1cbc Suspend: 0 Teb: 7ffd8000 Unfrozen
+   7  Id: 23c4.4598 Suspend: 0 Teb: 7ffd4000 Unfrozen
+   8  Id: 23c4.402c Suspend: 0 Teb: 7ffd3000 Unfrozen
+   9  Id: 23c4.4520 Suspend: 0 Teb: 7ffd9000 Unfrozen
+  10  Id: 23c4.4784 Suspend: 0 Teb: 7ff3e000 Unfrozen
+  11  Id: 23c4.780 Suspend: 0 Teb: 7ff3d000 Unfrozen
+  12  Id: 23c4.3a20 Suspend: 0 Teb: 7ff3c000 Unfrozen
+  13  Id: 23c4.4458 Suspend: 0 Teb: 7ff3b000 Unfrozen
+  14  Id: 23c4.3e7c Suspend: 0 Teb: 7ff3a000 Unfrozen
+  15  Id: 23c4.4258 Suspend: 0 Teb: 7ff39000 Unfrozen
+  16  Id: 23c4.4128 Suspend: 0 Teb: 7ff38000 Unfrozen
+  17  Id: 23c4.399c Suspend: 0 Teb: 7ff37000 Unfrozen
+  18  Id: 23c4.3584 Suspend: 0 Teb: 7ff36000 Unfrozen
+  19  Id: 23c4.41a8 Suspend: 0 Teb: 7ff32000 Unfrozen
+  20  Id: 23c4.38f8 Suspend: 0 Teb: 7ff31000 Unfrozen
+  21  Id: 23c4.4508 Suspend: 0 Teb: 7ff30000 Unfrozen
+  22  Id: 23c4.1530 Suspend: 0 Teb: 7ff2f000 Unfrozen
+  23  Id: 23c4.14e8 Suspend: 0 Teb: 7ff2e000 Unfrozen
+  24  Id: 23c4.3cc4 Suspend: 0 Teb: 7ff2d000 Unfrozen
+  25  Id: 23c4.2f24 Suspend: 0 Teb: 7ff2c000 Unfrozen
+  26  Id: 23c4.2a00 Suspend: 0 Teb: 7ff2b000 Unfrozen
+  27  Id: 23c4.3ec0 Suspend: 0 Teb: 7ff2a000 Unfrozen
+  28  Id: 23c4.4418 Suspend: 0 Teb: 7ff29000 Unfrozen
+  29  Id: 23c4.40a8 Suspend: 0 Teb: 7ff28000 Unfrozen
+  30  Id: 23c4.3908 Suspend: 0 Teb: 7ff27000 Unfrozen
+  31  Id: 23c4.4054 Suspend: 0 Teb: 7ff25000 Unfrozen
+  32  Id: 23c4.1b90 Suspend: 0 Teb: 7ff24000 Unfrozen
+  33  Id: 23c4.308c Suspend: 0 Teb: 7ff3f000 Unfrozen
+  34  Id: 23c4.4370 Suspend: 0 Teb: 7ff22000 Unfrozen
+  35  Id: 23c4.3600 Suspend: 0 Teb: 7ff20000 Unfrozen
+  36  Id: 23c4.414c Suspend: 0 Teb: 7ff1f000 Unfrozen
+  37  Id: 23c4.2cac Suspend: 0 Teb: 7ff33000 Unfrozen
+  38  Id: 23c4.3128 Suspend: 0 Teb: 7ff26000 Unfrozen
+  39  Id: 23c4.44dc Suspend: 0 Teb: 7ff35000 Unfrozen
+  40  Id: 23c4.2e84 Suspend: 0 Teb: 7ffd7000 Unfrozen
+  41  Id: 23c4.4040 Suspend: 0 Teb: 7ffd5000 Unfrozen
+  42  Id: 23c4.4714 Suspend: 0 Teb: 7ff34000 Unfrozen
+  43  Id: 23c4.3d1c Suspend: 0 Teb: 7ff23000 Unfrozen
+  44  Id: 23c4.38a8 Suspend: 0 Teb: 7ff21000 Unfrozen
+0:000> ~0s; .ecxr ; kb
+eax=00000087 ebx=1e662480 ecx=1e6607e8 edx=00188278 esi=1e662440 edi=001885b0
+eip=77266c04 esp=00188270 ebp=00188280 iopl=0         nv up ei pl zr na pe nc
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00000246
+ntdll+0x46c04:
+77266c04 c3              ret
+eax=00000001 ebx=0b9154f8 ecx=00189234 edx=00430020 esi=160cf6c8 edi=0782e5d0
+eip=56d1b9c8 esp=0018921c ebp=00189228 iopl=0         nv up ei pl nz na pe cy
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00010207
+Qt5Core!QString::QString+0x18:
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax ds:0023:00430020=45c743ff
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  Args to Child              
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d 00189234 00430020 006e0061 Qt5Core!QString::QString+0x18
+00189270 00354da1 994731d4 00000000 0000002a PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 0b9154f8 00000000 0000002a PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 00000000 0000002f 0018931c PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 00000000 00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> ln 00354da1 
+(00354670)   PD200!AddrCommand::qt_static_metacall+0x731   |  (00355180)   PD200!QBasicAtomicInteger<int>::ref
+0:000> .frame 01
+01 00189270 00354da1 PD200!AddrCommand::addMMediaList+0xcd
+0:000> .frame 00
+00 00189228 003aee7d Qt5Core!QString::QString+0x18
+0:000> kp
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d Qt5Core!QString::QString+0x18
+00189270 00354da1 PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> kP
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d Qt5Core!QString::QString+0x18
+00189270 00354da1 PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> .frame 00
+00 00189228 003aee7d Qt5Core!QString::QString+0x18
+0:000> dv
+Unable to enumerate locals, Win32 error 0n318
+Private symbols (symbols.pri) are required for locals.
+Type ".hh dbgerr005" for details.
+0:000> dt
+0:000> dd 00189228 
+00189228  00189270 003aee7d 00189234 00430020
+00189238  006e0061 99473108 00000000 0000002a
+00189248  17e55d30 17e55d40 17e55d44 00000001
+00189258  1ae4de00 1ae4de00 00000000 001892a0
+00189268  004f004a 00000001 001892ac 00354da1
+00189278  994731d4 00000000 0000002a 56d6e77a
+00189288  00000001 00000000 11b4e7c8 0097d263
+00189298  11b4e7c8 0097d263 0018a450 004e8f49
+0:000> da
+001892a8  "......."
+0:000> da 45c743ff
+45c743ff  "????????????????????????????????"
+45c7441f  "????????????????????????????????"
+45c7443f  "????????????????????????????????"
+45c7445f  "????????????????????????????????"
+45c7447f  "????????????????????????????????"
+45c7449f  "????????????????????????????????"
+45c744bf  "????????????????????????????????"
+45c744df  "????????????????????????????????"
+45c744ff  "????????????????????????????????"
+45c7451f  "????????????????????????????????"
+45c7453f  "????????????????????????????????"
+45c7455f  "????????????????????????????????"
+0:000> da 00430020
+00430020  ".C.E......E."
+0:000> addr 00430020
+          ^ No information found error in 'addr 00430020'
+0:000> addr 45c743ff
+          ^ No information found error in 'addr 45c743ff'
+0:000> addr 00189228 
+          ^ No information found error in 'addr 00189228 '
+0:000> addr 00189270
+          ^ No information found error in 'addr 00189270'
+0:000> windbg 
+       ^ No runnable debuggees error in 'windbg '
+0:000> db 00189234
+00189234  20 00 43 00 61 00 6e 00-08 31 47 99 00 00 00 00   .C.a.n..1G.....
+00189244  2a 00 00 00 30 5d e5 17-40 5d e5 17 44 5d e5 17  *...0]..@]..D]..
+00189254  01 00 00 00 00 de e4 1a-00 de e4 1a 00 00 00 00  ................
+00189264  a0 92 18 00 4a 00 4f 00-01 00 00 00 ac 92 18 00  ....J.O.........
+00189274  a1 4d 35 00 d4 31 47 99-00 00 00 00 2a 00 00 00  .M5..1G.....*...
+00189284  7a e7 d6 56 01 00 00 00-00 00 00 00 c8 e7 b4 11  z..V............
+00189294  63 d2 97 00 c8 e7 b4 11-63 d2 97 00 50 a4 18 00  c.......c...P...
+001892a4  49 8f 4e 00 ff ff ff ff-d0 92 18 00 87 44 35 00  I.N..........D5.
+0:000> db 00430020 
+00430020  ff 43 c7 45 e4 ff ff ff-ff c7 45 e8 00 00 00 00  .C.E......E.....
+00430030  c7 45 ec 00 00 00 00 ff-50 38 3b d8 0f 8c 71 ff  .E......P8;...q.
+00430040  ff ff 32 c0 8b 4d f4 64-89 0d 00 00 00 00 59 5f  ..2..M.d......Y_
+00430050  5e 5b 8b e5 5d c2 08 00-8b 07 85 c0 74 16 83 f8  ^[..].......t...
+00430060  ff 74 49 83 c8 ff f0 0f-c1 07 0f 95 c0 84 c0 75  .tI............u
+00430070  3b 8b 7d f0 8b 77 0c 8b-5f 08 83 c6 04 83 c3 04  ;.}..w.._.......
+00430080  8d 34 b7 8d 1c 9f 3b de-74 18 8d 9b 00 00 00 00  .4....;.t.......
+00430090  ff 76 fc 83 ee 04 e8 11-79 0b 00 83 c4 04 3b f3  .v......y.....;.
+0:000> .ecxr
+eax=00000001 ebx=0b9154f8 ecx=00189234 edx=00430020 esi=160cf6c8 edi=0782e5d0
+eip=56d1b9c8 esp=0018921c ebp=00189228 iopl=0         nv up ei pl nz na pe cy
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00010207
+Qt5Core!QString::QString+0x18:
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax ds:0023:00430020=45c743ff
+0:000> kp
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d Qt5Core!QString::QString+0x18
+00189270 00354da1 PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> da 00430020
+00430020  ".C.E......E."
+0:000> da 45c743ff
+45c743ff  "????????????????????????????????"
+45c7441f  "????????????????????????????????"
+45c7443f  "????????????????????????????????"
+45c7445f  "????????????????????????????????"
+45c7447f  "????????????????????????????????"
+45c7449f  "????????????????????????????????"
+45c744bf  "????????????????????????????????"
+45c744df  "????????????????????????????????"
+45c744ff  "????????????????????????????????"
+45c7451f  "????????????????????????????????"
+45c7453f  "????????????????????????????????"
+45c7455f  "????????????????????????????????"
+0:000> dd 00189228
+00189228  00189270 003aee7d 00189234 00430020
+00189238  006e0061 99473108 00000000 0000002a
+00189248  17e55d30 17e55d40 17e55d44 00000001
+00189258  1ae4de00 1ae4de00 00000000 001892a0
+00189268  004f004a 00000001 001892ac 00354da1
+00189278  994731d4 00000000 0000002a 56d6e77a
+00189288  00000001 00000000 11b4e7c8 0097d263
+00189298  11b4e7c8 0097d263 0018a450 004e8f49
+0:000> dd 00189234 
+00189234  00430020 006e0061 99473108 00000000
+00189244  0000002a 17e55d30 17e55d40 17e55d44
+00189254  00000001 1ae4de00 1ae4de00 00000000
+00189264  001892a0 004f004a 00000001 001892ac
+00189274  00354da1 994731d4 00000000 0000002a
+00189284  56d6e77a 00000001 00000000 11b4e7c8
+00189294  0097d263 11b4e7c8 0097d263 0018a450
+001892a4  004e8f49 ffffffff 001892d0 00354487
+0:000> dd 00430020
+00430020  45c743ff ffffffe4 e845c7ff 00000000
+00430030  00ec45c7 ff000000 d83b3850 ff718c0f
+00430040  c032ffff 64f44d8b 00000d89 5f590000
+00430050  e58b5b5e 0008c25d c085078b f8831674
+00430060  834974ff 0ff0ffc8 950f07c1 75c084c0
+00430070  f07d8b3b 8b0c778b c683085f 04c38304
+00430080  8db7348d de3b9f1c 9b8d1874 00000000
+00430090  83fc76ff 11e804ee 83000b79 f33b04c4
+0:000> dd 006e0061 
+006e0061  6975753e 37333a64 36304444 36373841
+006e0071  31453335 34383131 39443232 46353730
+006e0081  41393245 2f3c3131 3a666472 203e696c
+006e0091  6664723c 3e696c3a 64697575 3238333a
+006e00a1  34373232 35363931 31454430 38323831
+006e00b1  39374245 46463742 34423738 722f3c36
+006e00c1  6c3a6664 3c203e69 3a666472 753e696c
+006e00d1  3a646975 36393933 30423234 36344331
+0:000> .frame 00
+00 00189228 003aee7d Qt5Core!QString::QString+0x18
+0:000> dd 003aee7d 
+003aee7d  512076ff e8ce8b54 fffa7dc7 ce8b5451
+003aee8d  fa7d4ee8 8b5451ff 6905e8ce cf8bfffa
+003aee9d  04c93ee8 2876ff00 ce8b5451 fa7582e8
+003aeead  2076ffff ce8b5451 fa7d96e8 8b5451ff
+003aeebd  68dde8ce 5451fffa 14e8ce8b 8dfffa7d
+003aeecd  cf8bf045 3fe9e850 4d8d0005 b815fff0
+003aeedd  8b005189 c033e04d 83dc558b f08304c2
+003aeeed  dc558901 0fe44589 ffff5685 683aebff
+0:000> kb
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  Args to Child              
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d 00189234 00430020 006e0061 Qt5Core!QString::QString+0x18
+00189270 00354da1 994731d4 00000000 0000002a PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 0b9154f8 00000000 0000002a PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 00000000 0000002f 0018931c PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 00000000 00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> dd 006e0061 
+006e0061  6975753e 37333a64 36304444 36373841
+006e0071  31453335 34383131 39443232 46353730
+006e0081  41393245 2f3c3131 3a666472 203e696c
+006e0091  6664723c 3e696c3a 64697575 3238333a
+006e00a1  34373232 35363931 31454430 38323831
+006e00b1  39374245 46463742 34423738 722f3c36
+006e00c1  6c3a6664 3c203e69 3a666472 753e696c
+006e00d1  3a646975 36393933 30423234 36344331
+0:000> da 006e0061 
+006e0061  ">uuid:37DD06A87653E1118422D9075F"
+006e0081  "E29A11</rdf:li> <rdf:li>uuid:382"
+006e00a1  "227419650DE11828EB79B7FF87B46</r"
+006e00c1  "df:li> <rdf:li>uuid:399642B01C46"
+006e00e1  "DE118E05E00A924D8CC5</rdf:li> <r"
+006e0101  "df:li>uuid:39B4B2AEA7AEDE119DF29"
+006e0121  "D3E787E68C0</rdf:li> <rdf:li>uui"
+006e0141  "d:3A4677815E29DF11A0B087DF897F5C"
+006e0161  "56</rdf:li> <rdf:li>uuid:3A4F51B"
+006e0181  "F7911DE11A781FBA8671F5E89</rdf:l"
+006e01a1  "i> <rdf:li>uuid:3B8D9E113046DE11"
+006e01c1  "8E05E00A924D8CC5</rdf:li> <rdf:l"
+0:000> da 00430020 
+00430020  ".C.E......E."
+0:000> da 00189234 
+00189234  " "
+0:000> db 003aee7d 
+003aee7d  ff 76 20 51 54 8b ce e8-c7 7d fa ff 51 54 8b ce  .v QT....}..QT..
+003aee8d  e8 4e 7d fa ff 51 54 8b-ce e8 05 69 fa ff 8b cf  .N}..QT....i....
+003aee9d  e8 3e c9 04 00 ff 76 28-51 54 8b ce e8 82 75 fa  .>....v(QT....u.
+003aeead  ff ff 76 20 51 54 8b ce-e8 96 7d fa ff 51 54 8b  ..v QT....}..QT.
+003aeebd  ce e8 dd 68 fa ff 51 54-8b ce e8 14 7d fa ff 8d  ...h..QT....}...
+003aeecd  45 f0 8b cf 50 e8 e9 3f-05 00 8d 4d f0 ff 15 b8  E...P..?...M....
+003aeedd  89 51 00 8b 4d e0 33 c0-8b 55 dc 83 c2 04 83 f0  .Q..M.3..U......
+003aeeed  01 89 55 dc 89 45 e4 0f-85 56 ff ff ff eb 3a 68  ..U..E...V....:h
+0:000> dd 003aee7d 
+003aee7d  512076ff e8ce8b54 fffa7dc7 ce8b5451
+003aee8d  fa7d4ee8 8b5451ff 6905e8ce cf8bfffa
+003aee9d  04c93ee8 2876ff00 ce8b5451 fa7582e8
+003aeead  2076ffff ce8b5451 fa7d96e8 8b5451ff
+003aeebd  68dde8ce 5451fffa 14e8ce8b 8dfffa7d
+003aeecd  cf8bf045 3fe9e850 4d8d0005 b815fff0
+003aeedd  8b005189 c033e04d 83dc558b f08304c2
+003aeeed  dc558901 0fe44589 ffff5685 683aebff
+0:000> dw 003aee7d 
+003aee7d  76ff 5120 8b54 e8ce 7dc7 fffa 5451 ce8b
+003aee8d  4ee8 fa7d 51ff 8b54 e8ce 6905 fffa cf8b
+003aee9d  3ee8 04c9 ff00 2876 5451 ce8b 82e8 fa75
+003aeead  ffff 2076 5451 ce8b 96e8 fa7d 51ff 8b54
+003aeebd  e8ce 68dd fffa 5451 ce8b 14e8 fa7d 8dff
+003aeecd  f045 cf8b e850 3fe9 0005 4d8d fff0 b815
+003aeedd  5189 8b00 e04d c033 558b 83dc 04c2 f083
+003aeeed  8901 dc55 4589 0fe4 5685 ffff ebff 683a
+0:000> dq 003aee7d 
+003aee7d  e8ce8b54`512076ff ce8b5451`fffa7dc7
+003aee8d  8b5451ff`fa7d4ee8 cf8bfffa`6905e8ce
+003aee9d  2876ff00`04c93ee8 fa7582e8`ce8b5451
+003aeead  ce8b5451`2076ffff 8b5451ff`fa7d96e8
+003aeebd  5451fffa`68dde8ce 8dfffa7d`14e8ce8b
+003aeecd  3fe9e850`cf8bf045 b815fff0`4d8d0005
+003aeedd  c033e04d`8b005189 f08304c2`83dc558b
+003aeeed  0fe44589`dc558901 683aebff`ffff5685
+0:000> dp 003aee7d 
+003aee7d  512076ff e8ce8b54 fffa7dc7 ce8b5451
+003aee8d  fa7d4ee8 8b5451ff 6905e8ce cf8bfffa
+003aee9d  04c93ee8 2876ff00 ce8b5451 fa7582e8
+003aeead  2076ffff ce8b5451 fa7d96e8 8b5451ff
+003aeebd  68dde8ce 5451fffa 14e8ce8b 8dfffa7d
+003aeecd  cf8bf045 3fe9e850 4d8d0005 b815fff0
+003aeedd  8b005189 c033e04d 83dc558b f08304c2
+003aeeed  dc558901 0fe44589 ffff5685 683aebff
+0:000> db 003aee7d 
+003aee7d  ff 76 20 51 54 8b ce e8-c7 7d fa ff 51 54 8b ce  .v QT....}..QT..
+003aee8d  e8 4e 7d fa ff 51 54 8b-ce e8 05 69 fa ff 8b cf  .N}..QT....i....
+003aee9d  e8 3e c9 04 00 ff 76 28-51 54 8b ce e8 82 75 fa  .>....v(QT....u.
+003aeead  ff ff 76 20 51 54 8b ce-e8 96 7d fa ff 51 54 8b  ..v QT....}..QT.
+003aeebd  ce e8 dd 68 fa ff 51 54-8b ce e8 14 7d fa ff 8d  ...h..QT....}...
+003aeecd  45 f0 8b cf 50 e8 e9 3f-05 00 8d 4d f0 ff 15 b8  E...P..?...M....
+003aeedd  89 51 00 8b 4d e0 33 c0-8b 55 dc 83 c2 04 83 f0  .Q..M.3..U......
+003aeeed  01 89 55 dc 89 45 e4 0f-85 56 ff ff ff eb 3a 68  ..U..E...V....:h
+0:000> r
+Last set context:
+eax=00000001 ebx=0b9154f8 ecx=00189234 edx=00430020 esi=160cf6c8 edi=0782e5d0
+eip=56d1b9c8 esp=0018921c ebp=00189228 iopl=0         nv up ei pl nz na pe cy
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00010207
+Qt5Core!QString::QString+0x18:
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax ds:0023:00430020=45c743ff
+0:000> da 45c743ff
+45c743ff  "????????????????????????????????"
+45c7441f  "????????????????????????????????"
+45c7443f  "????????????????????????????????"
+45c7445f  "????????????????????????????????"
+45c7447f  "????????????????????????????????"
+45c7449f  "????????????????????????????????"
+45c744bf  "????????????????????????????????"
+45c744df  "????????????????????????????????"
+45c744ff  "????????????????????????????????"
+45c7451f  "????????????????????????????????"
+45c7453f  "????????????????????????????????"
+45c7455f  "????????????????????????????????"
+0:000> dd 45c743ff
+45c743ff  ???????? ???????? ???????? ????????
+45c7440f  ???????? ???????? ???????? ????????
+45c7441f  ???????? ???????? ???????? ????????
+45c7442f  ???????? ???????? ???????? ????????
+45c7443f  ???????? ???????? ???????? ????????
+45c7444f  ???????? ???????? ???????? ????????
+45c7445f  ???????? ???????? ???????? ????????
+45c7446f  ???????? ???????? ???????? ????????
+0:000> kb
+  *** Stack trace for last set context - .thread/.cxr resets it
+ChildEBP RetAddr  Args to Child              
+WARNING: Stack unwind information not available. Following frames may be wrong.
+00189228 003aee7d 00189234 00430020 006e0061 Qt5Core!QString::QString+0x18
+00189270 00354da1 994731d4 00000000 0000002a PD200!AddrCommand::addMMediaList+0xcd
+001892ac 00354487 0b9154f8 00000000 0000002a PD200!AddrCommand::qt_static_metacall+0x731
+001892d0 56e64f68 00000000 0000002f 0018931c PD200!AddrCommand::qt_metacall+0x37
+00000000 00000000 00000000 00000000 00000000 Qt5Core!QMetaObject::metacall+0x28
+0:000> r
+Last set context:
+eax=00000001 ebx=0b9154f8 ecx=00189234 edx=00430020 esi=160cf6c8 edi=0782e5d0
+eip=56d1b9c8 esp=0018921c ebp=00189228 iopl=0         nv up ei pl nz na pe cy
+cs=001b  ss=0023  ds=0023  es=0023  fs=003b  gs=0000             efl=00010207
+Qt5Core!QString::QString+0x18:
+56d1b9c8 f00fc102        lock xadd dword ptr [edx],eax ds:0023:00430020=45c743ff
