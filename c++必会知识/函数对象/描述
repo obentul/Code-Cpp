@@ -1,0 +1,13 @@
+定义:函数对象是指一个类，这个类是一个接口类(成员函数都是虚函数)，这个类声明了虚函数 --> virtual int operator ()(int);    即声明了重载运算符()的虚函数。
+
+模板:
+		class Func{
+			public:
+				virtual ~Func();
+				virtual double operator ()(double) = 0;
+		}
+
+		double commonUse(Func &f,double low,double high);		//Func的通用操作，所有继承的函数类都有这个动作(可以不要)
+
+
+存在的意义:	？？？

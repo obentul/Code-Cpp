@@ -1,0 +1,11 @@
+语法:   函数返回值 (classname::*指针名) (函数参数)
+	例如有：
+			class myclass{
+				void myfunc(int);
+			}
+	
+			void (myclass::*p_myfunc)(int);		//定义一个指向myclass类中,void 作为返回值且int作为参数的成员函数的指针
+
+	和指向成员变量的指针一样，用的时候只要访问   ”实例.*p_myfunc“ 或者 ”指向实例的指针->*p_myfunc“   就好了
+
+说明:	还可以创建指向const函数的指针(void func(int)const)，以及虚函数的指针
