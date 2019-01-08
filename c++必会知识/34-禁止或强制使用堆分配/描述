@@ -1,0 +1,23 @@
+有时候，指明一些类的对象不应该被分配到堆上时好主意，这样可以确保不会出现内存泄露。
+存在栈上的局部对象，其析构函数会被自动调用，用来销毁对象(exit和abort发生的非正常程序终止时需要特殊处理)
+存在static内存段上的对象，同样会被自动销毁。
+
+
+模板：
+
+class NoHeap{
+    public:
+	//....
+    protected:
+        void *operator new( size_t ) {return 0;}	//显式定义new运算符，防止编译器自动生成public的new
+	void operator delete(void *) {}		//显式定义delete运算符，防止编译器自动生成public的delete
+};
+
+上文中之所以定义为protected，是因为在某些平台上，new和delete运算符都会被基类的子类隐士调用
+如果NoHeap类不打算作为基类，那么就把new和delete声明为private的。
+
+
+PS：创建实例的方式
+1）在栈上  myclass tmp;
+2）在堆上  myclass *p_tmp = new myclass();
+

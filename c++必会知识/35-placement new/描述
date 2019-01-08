@@ -1,0 +1,33 @@
+placement new是operator new的一个标准重载版本，正如34中描述的，我们可以对operator new重载，定义新的动作，
+但是placement new则是固定的，“没法被重载”。
+
+我们常使用的new  和 operator new是不一样的，new是不可被重载的，new会调用operator new函数，同时在调用构造函数
+，然后返回指针给调用者。同理delete也是如此
+
+
+new --> operator new
+delete --> opertaor delete
+
+我们使用的 myclass *p_tmp = new myclass(); 这里的new 其实就是new ，这个new的实现即为直接调用operator new
+，同理delete。
+
+由于new动作是固定的，我们可以把new 当做 operator new，如果想加个日志什么的，可以重载operator new。
+
+
+
+使用new：
+	myclass *p_tmp = new myclass();		//这里的myclass()是构造函数
+
+使用operator new：
+	1)
+	myclass *p_tmp = operator new(sizeof(myclass));		//这里指分配内存，不调用myclass的构造函数
+								//和malloc一样
+	2)或者
+	myclass *p_tmp = new myclass;			//注意，这里没有()，表示没有调用构造函数
+
+
+小结：
+1）你想在堆上建立一个对象，应该用new操作符。它既分配内存又为对象调用构造函数。
+2）假设你只想分配内存，就应该调用operator new函数；它不会调用构造函数。
+3）假设你想定制自己的在堆对象被建立时的内存分配过程，你应该写你自己的operator new函数。然后使用new操作符，new操作符会调用你定制的operator new。
+4)假设你想在一块已经获得指针的内存里建立一个对象。应该用placement new。

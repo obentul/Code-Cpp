@@ -1,0 +1,8 @@
+QString *p1 = new QString;		//等价于 QString *p1 = malloc(sizeof(QString))
+
+
+QString *p2 = new QString();		//等价于 QString *p1 = malloc(sizeof(QString))
+					//  	QString::QString();
+					// 把实例化的QString对象写入 p1,这里应该用memcpy操作
+
+QString *p3 = new QString("xxx");	//同上

@@ -1,0 +1,7 @@
+如前文所述，对于如下语句，实际上做了3个动作
+
+String *title = new String("Kicks");
+
+1）使用operator new来分配了一段区域
+2）使用String的构造函数来创建一个实例，同时值为"Kicks"
+3）把实例放到operator new分配的区域中
