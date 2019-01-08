@@ -1,0 +1,31 @@
+是一种设计模式
+
+
+通过对纯虚构造函数clone的实现来达到效果
+
+
+模板：
+
+class Meal{
+	public:
+		virtual ~Meal();
+		virtual void eat = 0;
+		virtual Meal *clone() const = 0;
+}
+
+class Spaghetti : public Meal{
+public:
+	Spaghetti(const Spaghetti &);	//接收实例的构造函数，即用实例来初始化
+	void eat();
+	Spaghetti *clone() const
+		{
+			return new Spaghetti(*this);	//使用构造函数，把刚才接收实例的值赋值给新创建的实例，并返回出去
+		}
+};
+
+
+使用时候:
+Spaghetti *tmp = tmp2.clone();		//tmp2是已知的一个Spaghetti实例
+
+否则的话可以向下面这样写：
+Spaghetti *tmp = new Spaghetti(tmp2);	//这里的Spaghetti的构造需要具体实现，实现和clone一样
