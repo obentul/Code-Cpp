@@ -1,0 +1,12 @@
+static char* UniToUTF8(CString strUnicode)
+{
+USES_CONVERSION;
+LPWSTR pwStr=new wchar_t[strUnicode.GetLength()+1];
+wcscpy(pwStr,T2W((LPCTSTR)strUnicode));
+int ilen = WideCharToMultiByte(CP_UTF8, 0, pwStr, -1, NULL, 0, NULL, NULL);
+char *szUtf8Temp=new char[ilen + 1];
+memset(szUtf8Temp, 0, ilen +1);
+
+WideCharToMultiByte (CP_UTF8, 0, pwStr, -1, szUtf8Temp, ilen, NULL,NULL);
+return szUtf8Temp;
+}
