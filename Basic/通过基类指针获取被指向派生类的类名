@@ -1,0 +1,12 @@
+Arwen* pArwen = new Arwen;
+
+Arwen arwen;
+
+cout<<typeid( pArwen ).name()<<endl;//打印出class Arwen*
+
+cout<<typeid( *pArwen ).name();  //打印出class Arwen
+
+cout<<typeid( arwen ) ;  //打印出class Arwen
+
+cout<< typeid (Arwen) ; //打印出class Arwen
+
