@@ -1,0 +1,25 @@
+场景：
+
+void vlcVideoPlayer::setContainer(){
+    libvlc_media_player_set_hwnd(m_mediaPlayer,(void *)m_container->winId());
+}
+
+对于libvlc_media_player_set_hwnd函数，其第二个参数要求 入参必须有 winId成员。这个时候就要求m_container
+必须是一个包含 winId() 的类。
+
+目前已知的有 QWindw QWidget 和 QLabel ， 所以这里有个需求就是在编译时就判断 m_container是不是这三个类
+中的一种，如果不是，就应该报错。
+
+
+
+方案一：  在libvlc_media_player_set_hwnd前面通过typeid来判断m_container的类型，如果不是QWindw QWidget QLa
+bel，则return
+
+	这个方案是在 运行时检查，不能避免编码时操作不当导致的问题，虽然现在IDE可以通过自动补全来避免
+	这个问题，但是不是最优解，最优解应当是在编译时就发现问题
+
+
+方案二：  在定义setContainer的时候，设定入参--->setContainer(typename T) ,对T进行约束，编译时检查T是否
+是QWindw QWidget 和 QLabel，如果是其中之一，则编译通过，否则编译不予通过
+
+
