@@ -1,0 +1,17 @@
+可以使用struct来定义类
+
+struct A{
+  
+  int a;
+  char b;
+ 
+  void (*func)(int x);
+
+}
+
+但是struct定义的 “类” ，所有成员都是public的，无法设置为private
+
+与之相反，class定义的类，则可以控制权限
+
+通常，如果一个类的所有数据成员都是public的，那么定义一个结构体即可，如果需要权限控制，那么定义class
+
