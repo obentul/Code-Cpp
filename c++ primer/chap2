@@ -89,7 +89,13 @@ constexpr int b = Inc(cin.get());
 ------------------------
 
 
-处理类型
+下面两条语句等价：
+typedef int myInt;
+using myInt = int;
+注：typedef和#define不一样，不能简单替换
+
+
+
 
 
 
