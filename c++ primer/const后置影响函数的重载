@@ -1,0 +1,36 @@
+
+      perator[]( const char *key );				//this指针指向的实例是非const的，则使用此版本
+      const Value &operator[]( const char *key ) const;		//this指针指向的实例是const的，则使用此版本
+
+
+      Value &operator[]( const std::string &key );			//同上
+      const Value &operator[]( const std::string &key ) const;		//同上
+
+
+public:
+	void display()const
+	{
+		printf("const display");
+	}
+	void display()
+	{
+		printf("common display");
+	}
+
+
+int main(){
+
+	print a;
+	const print b;
+
+	a.display();		//common display
+	b.display();		//const display
+
+}
+
+
+
+
+
+
+
