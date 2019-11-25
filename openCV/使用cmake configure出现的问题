@@ -1,0 +1,76 @@
+一、Configure会报一些红色的警告信息，比如：
+
+复制代码
+ 1 CMake Warning at cmake/OpenCVDownload.cmake:193 (message):
+ 2 FFMPEG: Download failed: 7;"Couldn't connect to server"
+ 3 
+ 4 For details please refer to the download log file:
+ 5 
+ 6 D:/study/opencv_with_contrib_test_sln/CMakeDownloadLog.txt
+ 7 
+ 8 Call Stack (most recent call first):
+ 9 3rdparty/ffmpeg/ffmpeg.cmake:20 (ocv_download)
+10 cmake/OpenCVFindLibsVideo.cmake:200 (download_win_ffmpeg)
+11 CMakeLists.txt:636 (include)
+复制代码
+ 
+
+提示FFMPEG下载失败，因为无法连接到服务器，打开 CMakeDownloadLog.txt 查看详细信息。
+
+ 
+
+二、打开CMakeDownloadLog.txt
+
+复制代码
+#use_cache "D:/study/opencv-4.0.0/.cache"
+#do_copy "opencv_ffmpeg.dll" "849286ccc527c99e5a218b67f13c6e8c" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/759a23e24ab787a0979f8a93103dcc3105ec10c1/ffmpeg/opencv_ffmpeg.dll" "D:/study/opencv_with_contrib_test_sln/3rdparty/ffmpeg"
+
+这两句的意思是说将 opencv_ffmpeg.dll（它的md5签名是 849286ccc527c99e5a218b67f13c6e8c，下载地址是  "https://raw.githubusercontent.com/opencv/opencv_3rdparty/759a23e24ab787a0979f8a93103dcc3105ec10c1/ffmpeg/opencv_ffmpeg.dll" ）
+ 从 "D:/study/opencv-4.0.0/.cache" 拷贝到 "D:/study/opencv_with_contrib_test_sln/3rdparty/ffmpeg"目录下。
+
+#missing "D:/study/opencv_with_contrib_test_sln/3rdparty/ffmpeg/opencv_ffmpeg.dll"
+目标目录下没有此文件
+
+#cmake_download "D:/study/opencv-4.0.0/.cache/ffmpeg/849286ccc527c99e5a218b67f13c6e8c-opencv_ffmpeg.dll" "https://raw.githubusercontent.com/opencv/opencv_3rdparty/759a23e24ab787a0979f8a93103dcc3105ec10c1/ffmpeg/opencv_ffmpeg.dll"
+下载此文件到源代码路径 /.cache/ffmpeg/，并命名为"md5-文件名"
+
+# timeout on name lookup is not supported
+# Trying 151.101.108.133...
+# TCP_NODELAY set
+# connect to 151.101.108.133 port 443 failed: Connection refused
+# Failed to connect to raw.githubusercontent.com port 443: Connection refused
+# Closing connection 0
+#
+连接到服务器失败
+复制代码
+ 
+
+三、分析
+
+公司工作机无法访问外网，自然就无法连接到下载服务器。那就直接通过外网下载好需要的文件，然后重命名为"md5-文件名"，放在  /.cache/ffmpeg/ 文件夹下面，或者直接放到目标路径  /3rdparty/ffmpeg/opencv_ffmpeg.dll（不用重命名）。
+
+(!!!!!!)注意：
+
+1、 https://raw.githubusercontent.com/opencv/opencv_3rdparty/759a23e24ab787a0979f8a93103dcc3105ec10c1/ffmpeg/ffmpeg_version.cmake" 无法直接下载，
+
+而是直接打开了ffmpeg_version.cmake，可以右键网页选择另存为 ffmpeg_version.cmake.txt，然后再改为ffmpeg_version.cmake。这里如果自己新建一个txt，然后直接将网页上的内容拷进去，然后再该后缀为.cmake是不行的，会提示md5不匹配。
+
+2、不同版本的OpenCV对应的 opencv_ffmpeg.dll 等缺失文件的 md5 签名是不一样的
+
+ 
+
+四、总结
+
+opencv自身继承了一些通用库(自己对通用库的包装)，已经很全面了，尽量避开对某些第三方库的依赖，但是其依赖ffmpeg这么一个庞大的库，所以不方便对ffpmeg进行实现，所以
+
+需要使用ffpmeg库，因此其提供了dll的web仓库以供下载，这样避免了让用户自己下载和编译ffpmeg而造成的各种不必要的麻烦。但是在下载的时候，可能会出现因为各种翻墙问题
+
+而不导致的链接不可用，这个时候就需要 按照 log中提供的内容去自行下载。根据log的内容，把下载的文件放到相应的路径下，再次configure即可。
+
+其中需要注意的是，ffmpeg_version.cmake.txt这个文件必须在网页中右键另存为，然后再改名，直接复制内容创建新文件不行，因为md5是对整个文件的加密。
+
+
+
+
+
+
