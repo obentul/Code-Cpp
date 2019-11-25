@@ -1,0 +1,28 @@
+1>g:\coding\ffmpeg\ffmpeg-20160413-git-0efafc5-win32-dev\include\libavutil\error.h(109): error C2054: 在“inline”之后应输入“(”
+1>g:\coding\ffmpeg\ffmpeg-20160413-git-0efafc5-win32-dev\include\libavutil\error.h(110): error C2085: “av_make_error_string”: 不在形参表中
+1>g:\coding\ffmpeg\ffmpeg-20160413-git-0efafc5-win32-dev\include\libavutil\error.h(110): error C2143: 语法错误 : 缺少“;”(在“{”的前面)
+1>g:\coding\ffmpeg\ffmpeg-20160413-git-0efafc5-win32-dev\include\libavutil\mem.h(93): error C2054: 在“inline”之后应输入“(”
+
+
+
+
+
+
+
+wikipedia解释：
+
+C++，C99和GNU C都支持内联函数，然而1989 ANSI C，这个最被广泛使用的C标准却不支持inline。
+
+
+
+
+
+
+
+
+解决方案是：在该头文件中加入
+
+
+#if defined(WIN32) && !defined(__cplusplus)
+#define inline __inline
+#endif
