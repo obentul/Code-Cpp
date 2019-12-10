@@ -1,0 +1,39 @@
+LPVOID lpvWrite;
+DWORD  dwLength;
+
+if (DS_OK == lpdsbStatic->Lock(
+      0,          // Offset at which to start lock.
+      0,          // Size of lock; ignored because of flag.
+      &lpvWrite,  // Gets address of first part of lock.
+      &dwLength,  // Gets size of first part of lock.
+      NULL,       // Address of wraparound not needed. 
+      NULL,       // Size of wraparound not needed.
+      DSBLOCK_ENTIREBUFFER))  // Flag.
+{
+  memcpy(lpvWrite, pbData, dwLength);
+  lpdsbStatic->Unlock(
+      lpvWrite,   // Address of lock start.
+      dwLength,   // Size of lock.
+      NULL,       // No wraparound portion.
+      0);         // No wraparound size.
+}
+else
+{
+  ErrorHandler();  // Add error-handling here.
+}
+
+To play the buffer, call IDirectSoundBuffer8::Play, as in the following example:
+
+
+lpdsbStatic->SetCurrentPosition(0);
+HRESULT hr = lpdsbStatic->Play(
+    0,  // Unused.
+    0,  // Priority for voice management.
+    0); // Flags.
+if (FAILED(hr))
+{
+  ErrorHandler();  // Add error-handling here.
+}
+
+
+

@@ -1,0 +1,18 @@
+HRESULT SetStopNotification(HANDLE hMyEvent, 
+        LPDIRECTSOUNDBUFFER8 lpDsbSecondary)
+{
+  LPDIRECTSOUNDNOTIFY8 lpDsNotify; 
+  DSBPOSITIONNOTIFY PositionNotify;
+  HRESULT hr;
+
+  if (SUCCEEDED(
+      hr = lpDsbSecondary->QueryInterface(IID_IDirectSoundNotify8,
+             (LPVOID*)&lpDsNotify))) 
+  { 
+    PositionNotify.dwOffset = DSBPN_OFFSETSTOP;
+    PositionNotify.hEventNotify = hMyEvent;
+    hr = lpDsNotify->SetNotificationPositions(1, &PositionNotify);
+    lpDsNotify->Release();
+  }
+  return hr;
+}

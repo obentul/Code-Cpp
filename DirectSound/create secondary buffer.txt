@@ -1,0 +1,38 @@
+HRESULT CreateBasicBuffer(LPDIRECTSOUND8 lpDirectSound, LPDIRECTSOUNDBUFFER8* ppDsb8) 
+{ 
+  WAVEFORMATEX wfx; 
+  DSBUFFERDESC dsbdesc; 
+  LPDIRECTSOUNDBUFFER pDsb = NULL;
+  HRESULT hr; 
+ 
+  // Set up WAV format structure. 
+
+  memset(&wfx, 0, sizeof(WAVEFORMATEX)); 
+  wfx.wFormatTag = WAVE_FORMAT_PCM; 
+  wfx.nChannels = 2; 
+  wfx.nSamplesPerSec = 22050; 
+  wfx.nBlockAlign = 4; 
+  wfx.nAvgBytesPerSec = wfx.nSamplesPerSec * wfx.nBlockAlign; 
+  wfx.wBitsPerSample = 16; 
+ 
+  // Set up DSBUFFERDESC structure. 
+ 
+  memset(&dsbdesc, 0, sizeof(DSBUFFERDESC)); 
+  dsbdesc.dwSize = sizeof(DSBUFFERDESC); 
+  dsbdesc.dwFlags = 
+    DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY
+    | DSBCAPS_GLOBALFOCUS; 
+  dsbdesc.dwBufferBytes = 3 * wfx.nAvgBytesPerSec; 		//buffer large enough to hold 3 seconds of streaming data
+  dsbdesc.lpwfxFormat = &wfx; 
+ 
+  // Create buffer. 
+ 
+  hr = lpDirectSound->CreateSoundBuffer(&dsbdesc, &pDsb, NULL); 
+  if (SUCCEEDED(hr)) 
+  { 
+     hr = pDsb->QueryInterface(IID_IDirectSoundBuffer8, (LPVOID*) ppDsb8);
+     pDsb->Release();
+  } 
+  return hr;
+} 
+

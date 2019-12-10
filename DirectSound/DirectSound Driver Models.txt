@@ -1,0 +1,20 @@
+Under the VXD driver model, all DirectSound mixing is done in Dsound.vxd, a virtual device driver. Dsound.vxd also provides close access to the actual 
+DMA buffer that the sound card uses to receive data from the host CPU. This is the same as the DirectSound primary buffer. A DirectSound application 
+can set specific properties of the primary buffer, such as sampling rate and bit depth, thus changing the properties of the hardware itself.
+
+Under the Windows Driver Model (WDM), DirectSound does not have direct access to the sound hardware, except in the case of hardware-accelerated buffers. 
+Instead, DirectSound sends data to the kernel mixer. The kernel mixer's job is to convert the format of multiple audio streams to a common format, mix 
+them together and send the result to the hardware. In a sense, it does what Dsound.vxd does. One major difference is that Dsound.vxd mixes only DirectSound 
+buffer data, but the kernel mixer mixes all Windows audio data, including data from applications that use the Win32 waveOut functions. The rule that 
+DirectSound and the waveform-audio output device cannot both be open at the same time is not true on systems with WDM drivers.
+
+Of particular importance is the kernel mixer's relationship with the audio hardware. the kernel mixer is the only software on the system that can specify 
+the format of the hardware's DMA buffer. It selects the format on the basis of sounds it is asked to mix. It sets the output format to the highest-quality 
+format of sounds that it is asked to mix, or to the closest format to this that the hardware supports.
+
+This has one very important implication: DirectSound cannot set the format of the hardware's DMA buffer. For your application, this means that the hardware 
+format is based on the data you actually play. If you play a 44 kHz file, Kmixer will mix all data up to 44 kHz and ensure that the hardware is running at 44 kHz.
+
+As an application developer, you don't choose the driver model used. That is completely determined by the type of sound card, the version of Windows, 
+and the installed driver. For this reason, it is very important that you cover all possibilities when you test your application. DirectSound might be 
+using Dsound.vxd or it might be using the kernel mixer, and you should ensure that your application's behavior and performance are acceptable on both.

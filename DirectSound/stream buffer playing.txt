@@ -1,0 +1,52 @@
+ BOOL AppWriteDataToBuffer( 
+        LPDIRECTSOUNDBUFFER8 lpDsb,  // The buffer.
+        DWORD dwOffset,              // Our own write cursor.
+        LPBYTE lpbSoundData,         // Start of our data.
+        DWORD dwSoundBytes)          // Size of block to copy.
+    { 
+      LPVOID  lpvPtr1; 
+      DWORD dwBytes1; 
+      LPVOID  lpvPtr2; 
+      DWORD dwBytes2; 
+      HRESULT hr; 
+     
+      // Obtain memory address of write block. This will be in two parts
+      // if the block wraps around.
+     
+      hr = lpDsb->Lock(dwOffset, dwSoundBytes, &lpvPtr1, 
+          &dwBytes1, &lpvPtr2, &dwBytes2, 0); 
+     
+      // If the buffer was lost, restore and retry lock. 
+     
+      if (DSERR_BUFFERLOST == hr) 
+      { 
+        lpDsb->Restore(); 
+        hr = lpDsb->Lock(dwOffset, dwSoundBytes, 
+            &lpvPtr1, &dwBytes1,
+            &lpvPtr2, &dwBytes2, 0); 
+      } 
+      if (SUCCEEDED(hr)) 
+      { 
+        // Write to pointers. 
+     
+        CopyMemory(lpvPtr1, lpbSoundData, dwBytes1); 
+        if (NULL != lpvPtr2) 
+        { 
+          CopyMemory(lpvPtr2, lpbSoundData+dwBytes1, dwBytes2); 
+        } 
+     
+        // Release the data back to DirectSound. 
+     
+        hr = lpDsb->Unlock(lpvPtr1, dwBytes1, lpvPtr2, 
+        dwBytes2); 
+        if (SUCCEEDED(hr)) 
+        { 
+          // Success. 
+          return TRUE; 
+        } 
+      } 
+     
+      // Lock, Unlock, or Restore failed. 
+     
+      return FALSE; 
+    } 

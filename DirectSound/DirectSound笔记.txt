@@ -1,0 +1,238 @@
+Object				Number																			Purpose	Main interfaces
+Device				One in each application	Manages the device and creates sound buffers.			IDirectSound8
+
+Secondary buffer	One for each sound	Manages a static or streaming sound and plays it 			IDirectSoundBuffer8, IDirectSound3DBuffer8, IDirectSoundNotify8
+					into the primary buffer.	
+					
+Primary buffer		One in each application	Mixes and plays sounds from secondary buffers, 			IDirectSoundBuffer, IDirectSound3DListener8
+					and controls global 3D parameters.	
+					
+Effect				Zero or more for each secondary buffer	Transforms the sound in a 				Interface for the particular effect, such as IDirectSoundFXChorus8
+					secondary buffer.	
+
+
+		注：1）因为我们几乎不会常见主缓存，所以下面提到的创建缓存均指创建 二级缓存/辅助缓存/副缓存 。
+			2）
+					
+					
+------>概念<------
+DirectSound automatically creates and manages the primary buffer
+	PS : in order to obtain the IDirectSound3DListener8 interface, the application must 
+		explicitly create a primary buffer object.		
+		
+When sounds in secondary buffers are played, DirectSound mixes them in the primary buffer and sends them to the rendering device.
+
+
+------>设备<------
+The DirectSound device object represents a rendering device and is used to manage the device and to create sound buffers.
+
+Multiple applications can create objects for the same sound device.
+
+
+------>当前系统可用设备(Sound Devices)的枚举<------
+you create the device object by calling the "DirectSoundCreate8/DirectSoundCreate" function
+
+如果想要选择指定声卡/同时使用多个声卡/定制化使用声卡，那么在创建设备的时候需要指定相关参数，否则使用默认参数获取一个默认设备即可
+
+
+------>创建设备实例/对象<------
+The simplest way to create the device object is by using the DirectSoundCreate8/DirectSoundCreate function
+	PS : #if DIRECTSOUND_VERSION >= 0x0800 
+				USE DirectSoundCreate8
+		 #else 
+				USE DirectSoundCreate
+				
+If your application will capture sounds as well as play them, you can conveniently create both rendering and capture devices, 
+as well as playback and capture buffers, by using the "DirectSoundFullDuplexCreate8" function.
+
+				
+------>协作等级<------
+windows是多任务系统，对于同一个声卡驱动，可能会有多个应用程序在同时使用它。
+
+After creating a device object, you must set the cooperative level for the device by using the “IDirectSound8::SetCooperativeLevel” method. 
+Unless you do this, no sounds will be heard.
+
+
+------>设备能力<------
+DirectSound enables your application to examine the hardware capabilities of the sound device.
+
+After calling the DirectSoundCreate8 function to create a device object, your application can retrieve the capabilities of the
+sound device by calling the “IDirectSound8::GetCaps” method.
+
+
+------>缓存的基础理论<------
+For most buffers, the destination is a mixing engine called the primary buffer. 
+
+Your application must create at least one secondary sound buffer for storing and playing individual sounds.
+
+				
+------>创建辅助缓存(secondary buffer)<------
+A secondary buffer can exist throughout the life of an application, or it can be destroyed when no longer needed. 
+
+You mix sounds from different secondary buffers simply by playing them at the same time. 
+
+example ------> example-create secondary buffer.txt
+
+Nonstreaming buffers should be made just large enough to accommodate the entire sound.
+(非流式缓冲策略的缓冲区应当能够容纳所有数据，比如如果从文件中读数据，且不使用流对象作为IO。那么必须分配能够容下所有数据的缓冲区)
+
+Buffer objects are owned by the device object that created them.
+
+
+------>Duplicating 缓冲区(不是copy，而是共享)<------
+You can create two or more secondary buffers containing the same data by using the IDirectSound8::DuplicateSoundBuffer method. 
+
+You cannot duplicate the primary sound buffer. Because the duplicate buffer shares memory with the original buffer, changes to 
+the data of one buffer will be reflected in duplicate buffers.
+
+
+------>缓冲区控制选项<------
+This is done with the “dwFlags” member of the DSBUFFERDESC structure
+Flag						Description
+DSBCAPS_CTRL3D				The sound source can be moved in 3D space.			(3D空间使能)
+DSBCAPS_CTRLFX				Effects can be added to the buffer.					(附加音效使能)
+DSBCAPS_CTRLFREQUENCY		The frequency of the sound can be changed.			(调频使能)
+DSBCAPS_CTRLPAN				The sound source can be moved from left to right.	(左右声道切换使能)
+DSBCAPS_CTRLPOSITIONNOTIFY	Notification positions can be set on the buffer.
+DSBCAPS_CTRLVOLUME			The volume of the sound can be changed.				(音量控制使能)
+
+if you attempt to change the volume by using the IDirectSoundBuffer8::SetVolume method, the method can succeed only if 
+the DSBCAPS_CTRLVOLUME flag was specified when the buffer was created. Otherwise the method fails and returns the 
+DSERR_CONTROLUNAVAIL error code.
+
+
+------>缓冲区内的数据固定<------
+当缓冲区内的数据固定时，可以一次性锁住整个缓冲区，然后根据缓冲区配置的缓冲区大小，使用Lock函数每次读入缓冲区大小的数据，
+轮询读完整个文件，同时依次输出。
+
+example-static buffer playing.txt
+
+
+
+------>缓冲区内的数据是流<------
+流数据的特点：缓冲区可以视为一个固定大小的队列，新数据的压入会伴随着旧数据的清除。
+因此，当缓冲区的数据是流式的，那么就不能对整个缓冲区加锁，即Lock的参数不能像固定缓冲区那样(还是使用同一个函数)。
+	PS: 也就这一点不一样 ，即需要分段加锁读取，这也要求数据在存储时需要认为地进行一定的分段。
+
+example-stream buffer playing.txt
+
+
+------>音频播放控制<------
+设置音量：
+IDirectSoundBuffer8::GetVolume
+IDirectSoundBuffer8::SetVolume
+Setting the volume on the “primary buffer” changes the waveform-audio volume of the sound card. 
+
+设置播放速度：
+IDirectSoundBuffer8::GetFrequency
+IDirectSoundBuffer8::SetFrequency
+ you can retrieve and set the frequency at which audio samples play. You cannot change the frequency of the primary buffer.
+
+设置播放进度(seek to)：
+IDirectSoundBuffer8::GetPan 
+IDirectSoundBuffer8::SetPan
+
+PS：In order to use any of these controls, you must set the appropriate flags when creating the buffer 。see------>缓冲区控制选项<------
+
+
+
+------>缓冲区的内部实现--play游标和write游标<------
+DirectSound maintains two pointers into the buffer: the play cursor and the write cursor. These positions are byte offsets 
+into the buffer, not absolute memory addresses.
+
+The IDirectSoundBuffer8::Play method always starts playing at the position of the play cursor.
+When a buffer is created, the play cursor is set to 0. As the buffer is played, the cursor moves and always points to the next 
+byte of data to be played. When the buffer is stopped, the cursor remains where it is.
+
+write游标用来表示，从此处开始向后写数据都是安全的，这就是write的作用，就是用来标注从哪开始写数据安全。wirte之前的位置都不能写数据
+
+我们可以把缓冲区看做是一个钟表盘，如果play游标指向1点的位置，那么write游标必定要比1点晚，可以假设是2点位置，那么1点和2点中间的
+数据就已经被缓冲到内核中了，这部分数据一定不能修改，不论何种方式修改都是危险的。
+play游标和write游标之间总是有一定的距离，但是这两者始终是以相同的速度移动。
+
+再次强调：write游标的移动是跟随play游标的，“不是”跟随写缓冲的。即write游标是一个系统级的，不是用户级的。
+用户写数据，需要自己记录写的位置，和这个write游标没有半毛钱关系。
+
+通过控制play游标，可以控制播放进度，但是不提供接口取获取/控制write游标。
+ IDirectSoundBuffer8::GetCurrentPosition
+ IDirectSoundBuffer8::SetCurrentPosition
+ 
+创建缓冲区时指定DSBCAPS_GETCURRENTPOSITION2 标志，可以提高 play 游标的精确度
+
+
+------>播放缓冲区的事件通知机制<------
+当play游标移动到某个位置时，或者停止时，DirectSound都有事件通知机制。以下两种场景中会用到：
+1）当一个buffer中的内容播完以后，应用层需要知道这个事件，以便采取相应的动作，比如继续播放下一个音频，或者退出程序，等等。
+2）当缓冲区中是流数据时，当play游标移动到某个点时(比如缓冲区的尾部)，此时需要对缓冲区的数据进行替换，把已经播放的数据移除
+   缓冲区，接收新的数据进入缓冲区。
+   
+   注：事件指代的是 play游标 位置的改变
+   
+在buffer不是正在播放的前提下，可以在buffer中锚入 N 个点，每个点都绑定一个windows的事件对象，当play游标移动到这些锚点的时候，
+绑定的事件对象将会被触发。对应的方法是 ——>  IDirectSoundNotify8::SetNotificationPositions
+
+buffer可以有N个，每个buffer都可以锚入N个锚点。每个锚点都有两个参数：1）距离缓冲区开始位置的偏移量(单位是字节)，2）绑定的事件对象
+
+example-buffer notifycation
+
+某些驱动程序的事件通知可能不准确，我们可以在每次收到通知后，通过IDirectSoundBuffer8::GetCurrentPosition 来确认是否真正地到达了
+锚点。
+
+
+------>混音<------
+由于用户一般不控制primary buffer，所以我们在使用时很少会自己去控制混音。
+Secondary buffers played simultaneously are automatically mixed in the primary buffer. Under the Windows driver model, the mixing 
+is done in the kernel mixer. 
+
+
+------>循环播放<------
+1）使用DSBPLAY_LOOPING 标志可以实现音频的循环播放。
+2）可以通过捕获buffer结束事件，并把play游标置0实现从头播放。
+3）可以通过把音频的部分数据循环写入流，再用buffer使用流输入，实现循环播放音频的某一段内容。
+
+
+
+------>缓冲管理<------
+Your application can use the IDirectSoundBuffer8::GetStatus method to determine if the buffer is playing or if it has stopped.
+
+（!）Use the IDirectSoundBuffer8::GetFormat method to retrieve information about the format of the sound data in a buffer. 
+You also can use IDirectSoundBuffer8::SetFormat to set the format of the sound data in the primary buffer. For more information, 
+
+（!）The SetFormat method cannot be called on secondary buffers. After a secondary buffer is created, its format is fixed. 
+To play a sound that is in another format, you must create a new sound buffer with this format.
+
+如果缓冲区的数据被存在了声卡的内存里，此时另外一个进程抢占了声卡的使用权，那么刚才的数据将会丢失。
+
+The DSERR_BUFFERLOST error code is returned when the IDirectSoundBuffer8::Lock or IDirectSoundBuffer8::Play method is called for a lost buffer.
+
+如果buffer中的数据丢失了，那么可以使用Restore 来恢复
+
+
+
+->捕捉音频<-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
