@@ -1,0 +1,13 @@
+Note: All functions in this class are reentrant.
+
+Note: These functions are also thread-safe:
+
+connect(const QObject *sender, const char *signal, const QObject *receiver, const char *method, Qt::ConnectionType type)
+connect(const QObject *sender, const char *signal, const char *method, Qt::ConnectionType type) const
+connect(const QObject *sender, PointerToMemberFunction signal, const QObject *receiver, PointerToMemberFunction method, Qt::ConnectionType type)
+connect(const QObject *sender, PointerToMemberFunction signal, Functor functor)
+connect(const QObject *sender, PointerToMemberFunction signal, const QObject *context, Functor functor, Qt::ConnectionType type)
+disconnect(const QObject *sender, const char *signal, const QObject *receiver, const char *method)
+disconnect(const char *signal, const QObject *receiver, const char *method) const
+disconnect(const QObject *sender, PointerToMemberFunction signal, const QObject *receiver, PointerToMemberFunction method)
+deleteLater()
