@@ -1,0 +1,17 @@
+如果stop 或 delete 一个QTimer，那么必须保证创建QTimer 的线程 和 stop/delete QTimer的线程应该在同一个线程中。
+否则会导致崩溃。
+
+
+
+解决方案：
+
+1）不要在其他线程中 stop QTimer
+2）使用deleteLater 代替 delete，deleteLater会在event loop返回到QTimer所在线程时对QTimer进行删除。
+
+
+Looking at the Qt 4 code and Qt 5 code, deleteLater() just invokes QCoreApplication::postEvent() 
+which is explicitly declared thread-safe. So, it should befine to just call it directly. As the event queue is 
+processed in the object's owner thread, deletion will happen in thread A.
+
+Only Qt 5 QObject documentation explicitly lists deleteLater() as thread safe. If you want to completely rely 
+on documented behaviour in Qt 4, use postEvent().
