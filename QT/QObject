@@ -1,0 +1,247 @@
+#1 ====================================================================================
+
+QObject提供一个虚函数void QObject::childEvent(QChildEvent *event)用来捕捉 和 自己child
+相关的信号，比如有其他QObject成为自己的child，某个/某些child不再是自己的child，或者child
+渲染完毕等等。具体见 QChildEvent
+
+#2 ====================================================================================
+
+信号 和 槽
+
+QObject::connect 函数有返回值，返回一个QMetaObject::Connection实例，如果connect失败，返回值
+为空。
+
+connect的时候可以指定标志位Qt::UniqueConnection，此标志表示信号和槽希望建立一对一的关系，如果
+当前信号 已经链接了其他槽，那么返回失败，如果当前槽链接到了其他信号，也返回失败。
+
+默认情况下，信号会进入一个信号队列等待被送出。如果指定 特殊的标志，以让此信号跳过排队，立刻送达
+值对应的槽对象处理。
+
+
+disconnect 的函数原型和 connect比较像，其用来解除信号/槽链接关系。有如下用法：
+disconnect(const QObject *sender, const char *signal, const QObject *receiver, const char *method)
+
+1）解除某个QObject上所有信号/槽关系(别的QObject连到自己的信号，自己的槽连到别的QObject的信号)
+	disconnect(myObject, 0, 0, 0);  或者  myObject->disconnect();
+	
+2）解除指定信号的关联关系
+	disconnect(myObject, SIGNAL(mySignal()), 0, 0);  或者  myObject->disconnect(SIGNAL(mySignal()));
+	
+3）解除和指定QObject的所有关系
+	disconnect(myObject, 0, myReceiver, 0);  或者  myObject->disconnect(myReceiver);
+	
+	ps : sender不能是0
+	
+	
+#3 ====================================================================================	
+	
+调试相关
+
+void QObject::dumpObjectInfo()
+void QObject::dumpObjectTree()  
+
+以上两个函数在调试模式下可工作，输出的内容如下：
+
+
+
+
+
+
+#4 ====================================================================================	
+
+QList<QByteArray> QObject::dynamicPropertyNames() const
+
+获得一个列表，其中包含当前QObject的所有动态属性的 “名称”
+
+#5 ====================================================================================	
+
+虚函数 bool QObject::event(QEvent *e)
+
+所有被递送给指定QObject的事件都会触发本函数，此函数的默认动作是根据QEvent的值进入不同的
+event handler 。 可以在这个函数中对指定的QEvent类型 进行 预处理，后处理，不处理等自定义动作。
+
+
+虚函数 bool QObject::eventFilter(QObject *watched, QEvent *event)
+
+在进入event函数之前，还可以为QObject增加一个预处理时间过滤器，可以在这里面进行 预处理，后处理，
+不处理等自定义动作。
+
+
+event 和 eventFilter的关系：
+可以把eventFiler看做和event一样的内部逻辑，当一个QObject 通过installEventFilter为自己
+增加一个eventfilter后，所有QEvemt都将先进入 eventFilter 函数，如果在 eventFilter 中return 
+true，则QEvent不会传递给 event处理，如果return false，则会传递给event函数。
+
+
+可以直接在event中通过代码实现和 eventfilter一样的功能，但是要记住eventfilter如果被install，那么
+它是领先于event函数优先接收QEvent。
+
+可以理解eventfilter为一个过滤对象(实际也是这样用的，除非自己重在eventfilter，然后作为installeventfilter
+的参数传给自己)，这个过滤对象在元对象体系中领先于被作用对象接收信号。
+
+https://blog.csdn.net/wang13342322203/article/details/81532207
+
+如果给QObject install了多个eventfilter，则最后一个会生效。
+
+
+Warning: If you delete the receiver object in your eventFilter() function, be sure to return true. 
+If you return false, Qt sends the event to the deleted object and the program will crash.
+
+Note that the filtering object must be in the same thread as this object. If filterObj is in a different 
+thread, this function does nothing. If either filterObj or this object are moved to a different thread 
+after calling this function, the event filter will not be called until both objects have the same thread 
+affinity again (it is not removed).
+
+#6 ====================================================================================	
+		
+isSignalConnected 用来判断当前信号是否和任何槽有链接关系。
+
+通过这个判断，可以在没有链接关系的情况下，不进行信号的 emit，在进行程序初始化的时候，这有助于
+提高性能。
+
+ static const QMetaMethod valueChangedSignal = QMetaMethod::fromSignal(&MyObject::valueChanged);
+  if (isSignalConnected(valueChangedSignal)) {
+      QByteArray data;
+      data = get_the_value();       // expensive operation
+      emit valueChanged(data);
+  }
+	
+#7 ====================================================================================		
+
+moveToThread 不是线程安全的，它只能 “推” 属于自己的 QObject 到其他线程，不能 “拉” 属于
+其他线程的QObject 到自己的线程。
+
+#8 ====================================================================================	
+
+int QObject::receivers(const char *signal) const 是 isSignalConnected的升级版，可以获得
+具体的链接数量。
+
+#9 ====================================================================================	
+
+信号 / 槽 和 跨线程
+
+信号链接(connect)有 五种 可选项：
+1）Qt::AutoConnection     如果接收者QObject和发送者QObject隶属于同一个线程，那么slot函数
+						  会被立刻执行，此时这个选项的功能和Qt::DirectConnection一样。
+						  如果不在同一个线程，则信号会被丢入接收者所属线程的信号接收队列，
+						  等到cpu执行权交由接收者线程时，此信号才会被处理
+						  
+2）Qt::DirectConnection   如果接收者 和 发送者隶属于同一个线程，那么此选项没有效果。
+						  如果隶属于不同线程，那么接收者的 slot 函数会被 “丢入” 发送者线程
+						  中执行。 （这里需要注意，因为slot函数会被丢入发送者线程，属于跨线程
+						  处理，需要注意跨线程delete QObject会导致崩溃的问题）
+						  
+3）Qt::QueuedConnection	  slot 函数会在 cpu 执行权切换到 接收者线程时 才会被执行，有一定的
+						  延迟
+						  
+4）Qt::BlockingQueuedConnection   如果发送者 和 接收者隶属于不同线程，那么发送者发送信号后
+								  将一直 “阻塞” ，直到 接收者的槽函数执行完毕。
+									 注意：这个场景下，发送者 和 接收者 “一定” 要隶属于不同
+									 线程，否则 发送者线程等待接收者线程的槽执行完毕，这
+									 就相当于自己等待自己执行完毕，是一个 “死锁”！！！
+
+5）Qt::UniqueConnection	  这是选项可以和其他选项一起使用，使用 “|” ，用来表示只能进行 单一链接，
+						  如果当前链接动作的 试图创建 多链接，则connect返回失败。
+
+
+#10 ====================================================================================	
+
+QObject *QObject::sender() const 
+
+在slot中调用这个函数可以获得发送者实例的指针。
+
+注意：如果connect的时候指定Qt::DirectConnection，这个函数将返回nullptr
+
+#11 ====================================================================================	
+
+Q_CLASSINFO(Name, Value)
+
+可以用来为类指定一些信息，在qml中可以访问到这些信息
+
+
+#12 ====================================================================================
+
+默认状态下，QObject没有拷贝构造和赋值构造，正常情况下，如果定义或使用拷贝构造和赋值构造将会造成错误。
+
+但是不同编译器对于同一条语句的解释可能不一样，这个时候需要使用 
+
+class MyClass : public QObject
+  {
+
+    private:
+      Q_DISABLE_COPY(MyClass)
+  };
+
+ 来显示告知编译器，不可以使用拷贝构造和赋值构造
+ 
+#13 ====================================================================================
+
+Q_EMIT 使用 第三方信号/槽机制时，需要使用这个宏
+
+#14 ====================================================================================
+
+Q_ENUM(...)创建枚举类型
+Q_FLAG(...)创建标志位类型
+
+Q_GADGET ，轻量级 Q_OBJECT， 不能有信号和槽，只能有 Q_ENUM, Q_PROPERTY and Q_INVOKABLE
+
+Q_INTERFACES(...) 声明自己实现了哪些接口
+
+Q_INVOKABLE 声明函数可以在元对象系统中使用，比如QMetaObject::invokeMethod().
+
+
+#15 ====================================================================================
+
+Qt 和 具备信号/槽的第三方库 合作编程。
+
+例如boost库也有信号/槽机制，而且其也使用signals ，slots ， emit 这样的关键字，那么在混合
+使用的时候就会导致重复定义标示符。
+
+这个使用Qt可以做出让步，然后在所有使用这些关键字的地方转而使用对应的宏，比如：
+signals   --  Q_SIGNALS(或者 Q_SIGNAL)
+slots     --  Q_SLOTS(Q_SLOT)
+emit      --  Q_EMIT
+
+同时需要在pro文件中定义 CONFIG += no_keywords
+
+class A:public QObject{
+
+signals:
+	void xxxSig(int);
+	
+slots:
+	void onXxxSig(int);
+
+}
+
+转换后
+
+class A:public QObject{
+
+Q_SIGNALS:
+	void xxxSig(int);
+	
+Q_SLOTS:
+	void onXxxSig(int);
+
+}
+
+同样，在代码中如果用emit xxxSig(100); 则要换成 Q_EMIT xxxSig(100);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
