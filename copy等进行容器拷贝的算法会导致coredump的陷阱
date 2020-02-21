@@ -48,7 +48,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	v1.push_back(A(4));
 	v1.push_back(A(3));
 
-	copy(v1.begin()++, v1.end()--, v2.begin());		//要求第三个参数--目的容器容量必须要比前两个参数迭代器之间的元素数量，否则coredump
+	copy(v1.begin()++, v1.end()--, v2.begin());		//要求第三个参数--目的容器容量必须要比前两个参数迭代器之间的元素数量大，否则coredump
 
 	vector<A>::iterator it = v2.begin();
 	for (; it != v2.end();it++){
