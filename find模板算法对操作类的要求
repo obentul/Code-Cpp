@@ -1,0 +1,62 @@
+// ConsoleApplication12.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include <Windows.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class A{
+public:
+	A(int i){
+		m_i = i;
+	}
+	A() = default;
+	~A() = default;
+
+	//两个const必须加上，否则 算法模板不认，编译报错找不到重载的 == 运算符 
+	bool operator==(const A& a)const{
+		return (a.m_i == m_i ? true : false);
+	}
+
+public:
+	int m_i;
+};
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	vector<A> v;
+	v.push_back(A(1));
+	v.push_back(A(2));
+	v.push_back(A(3));
+	v.push_back(A(4));
+
+	vector<A>::const_iterator it1 = v.begin();
+	vector<A>::const_iterator it2 = v.end();
+
+	if (A(1) == A(1)){
+		cout << "yes" << endl;
+	}
+	else{
+		cout << "no" << endl;
+	}
+
+	vector<A>::const_iterator ret = find(it1, it2, A(3));			//要求A必须有重载的 == 运算符，不然编译报错缺少 == 运算符 
+
+	if (ret == v.end()){				//边界条件是返回值 = 容器尾部
+		cout << "error" << endl;
+	}
+	else{								//如果找到，返回的迭代器指向找到的位置
+		cout << (*ret).m_i << endl;
+	}
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
