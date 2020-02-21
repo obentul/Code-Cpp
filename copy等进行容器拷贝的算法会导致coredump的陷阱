@@ -1,0 +1,62 @@
+// ConsoleApplication12.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include <Windows.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
+class A{
+public:
+	A(int i){
+		m_i = i;
+	}
+	A() = default;
+	~A() = default;
+
+	//两个const必须加上，否则 算法模板不认，编译报错找不到重载的 == 运算符 
+	bool operator==(const A& a)const{
+		return (a.m_i == m_i ? true : false);
+	}
+
+	//两个const必须加上，否则 算法模板不认，编译报错找不到重载的 < 运算符 
+	bool operator<(const A& a)const{
+		return (m_i < a.m_i ? true : false);
+	}
+
+	//两个const必须加上，否则 算法模板不认，编译报错找不到重载的 > 运算符
+	bool operator>(const A& a)const{
+		return (m_i > a.m_i ? true : false);
+	}
+
+public:
+	int m_i;
+};
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	vector<A> v1;
+	vector<A> v2(5);			//不能是空容器vector<A> v2;
+	v1.push_back(A(2));
+	v1.push_back(A(1));
+	v1.push_back(A(4));
+	v1.push_back(A(3));
+
+	copy(v1.begin()++, v1.end()--, v2.begin());		//要求第三个参数--目的容器容量必须要比前两个参数迭代器之间的元素数量，否则coredump
+
+	vector<A>::iterator it = v2.begin();
+	for (; it != v2.end();it++){
+		cout << (*it).m_i << endl;
+	}
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
