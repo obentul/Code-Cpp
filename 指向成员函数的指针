@@ -1,0 +1,68 @@
+// ConsoleApplication12.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include <Windows.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <iterator>
+
+
+using namespace std;
+
+class A{
+public:
+	A(int i){
+		m_i = i;
+	}
+	A() = default;
+	~A() = default;
+
+
+	static bool static_func(){
+		cout << "static func" << endl;
+		return false;
+	}
+
+public:
+	bool pub_func(){
+		cout << "pub_func" << endl;
+		return false;
+	}
+
+private:
+	bool pri_func(){
+		cout << "pri_func" << endl;
+		return false;
+	}
+
+public:
+	int m_i;
+};
+
+typedef bool(A::*p_A_fun)(void);			//能够 指向 A中所有 “bool返回值，无入参” 成员函数的指针类型
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	p_A_fun p_pri_func;
+	p_A_fun p_pub_func;
+	p_A_fun p_static_func;
+
+	//p_pri_func = &A::pri_func;			//让p_pri_func指向pri_func成员函数，失败，无法访问private成员
+	p_pub_func = &A::pub_func;				//让p_pub_func指向pub_func成员函数
+	//p_static_func = &A::static_func;		//让p_static_func指向static_func成员函数，失败，为什么？？？
+
+	A a;
+	A* pa = new A();
+	(a.*p_pub_func)();						//局部实例访问
+	(pa->*p_pub_func)();					//堆实例访问
+	(A().*p_pub_func)();					//临时实例访问
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
