@@ -1,0 +1,199 @@
+// ConsoleApplication12.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+#include <Windows.h>
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include <string.h>
+#include <stdio.h>
+#include <list>
+
+using namespace std;
+
+const char* head = "{\"msgType\"";
+const char tail[5] = { 0xfd, 0xff, 0xfd, 0xff ,'\0'};
+int tail_len = 4;
+
+// --- case 1 ---
+//char src[10][200] = {
+//	{ '1', '1', '1', '\0', 0xff, 0xfd, '1', '1', '1' },
+//	"ttt{\"msgType\":\"LoginRsp\",\"Cause\":0}kkk",
+//	{ 'j', 'j', '\0', '\0', 0xfd, 0xff, 0xfd, 0xff,'\0', },
+//	"ttt{\"msgType\":\"LoginRsp\",\"Cause\":0}",
+//	"kkk{\"msgType\":\"LoginRsp\",\"Cause\":1}",
+//	"jjj{\"msgType\":\"LoginRsp\",\"Cause\":2}",
+//	{ 0xfd, 0xff, 0xfd, 0xff },
+//	{ 0xfd, 0xff, 0xfd, 0xff },
+//	"jjj{\"msgType\":\"LoginRsp\",\"Cause\":3}",
+//	{ 0xfd, 0xff, 0xfd, 0xff },
+//};
+
+char src[10][200] = {
+	{ '1', '1', '1', '\0', 0xff, 0xfd, '1', '1', '1' },
+	"ttt{\"msgType\":\"LoginRsp\",\"Cause\":0}kkk",
+	{ 'j', 'j', 0xfd, 0xff, 0xfd, 0xff, '\0', '{' , '\"' },
+	"msgType\":\"LoginRsp\",\"Cause\":0}ttttt",
+	"kkk{\"msgType\":\"LoginRsp\",\"Cause\":1}",
+	"jjj{\"msgType\":\"LoginRsp\",\"Cause\":2}",
+	{ 0xfd, 0xff, 0xfd, 0xff },
+	{ 0xfd, 0xff, 0xfd, 0xff },
+	{'j','j','{','\"','m','s','g','T','y','p','e','\"',':','\"','L','o','g','i','n','R','s','p','\"',',','\"','C','a','u','s','e','\"',':','3','}',0xfd},
+	{ 0xff, 0xfd, 0xff },
+};
+
+char* RecvData(int i)
+{
+	return src[i];
+}
+
+void Trim(char* src,int src_len,int* dst_len)
+{
+	char* cur = src;
+	int tmp_len = src_len;
+	int i = 1;
+
+	while (i <= src_len){
+		if (*cur == '\0'){
+			if (i != src_len){
+				memcpy(cur, cur + 1, src_len - i);
+			}
+			else{
+				//最后一个是 \0 ,不能将下一个内存单元的数据拿过来，否则就内存访问越界了
+				//什么都不做，只需要将输出的长度-1即可
+			}
+			tmp_len--;
+		}else{
+			cur++;
+		}
+		i++;
+	}
+	*dst_len = tmp_len;
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	int dst_len[10];
+	list<string> msgs;
+	list<string> result;
+
+	string resultbuff;			//有效数据部分
+	string remainbuff;		//暂时无效的数据部分
+
+	basic_string <char>::size_type index, phead,ptail;
+	static const basic_string <char>::size_type npos = -1;
+
+	bool gotHead = false;
+
+	for (int i = 0; i < 10; i++){
+		
+		switch (i){
+		case 0:
+			Trim(src[i], 9, &dst_len[i]);
+			break;
+		case 1:
+			Trim(src[i], 40, &dst_len[i]);
+			break;
+		case 2:
+			Trim(src[i], 9, &dst_len[i]);
+			break;
+		case 3:
+			Trim(src[i], 37, &dst_len[i]);
+			break;
+		case 4:
+			Trim(src[i], 37, &dst_len[i]);
+			break;
+		case 5:
+			Trim(src[i], 37, &dst_len[i]);
+			break;
+		case 6:
+			Trim(src[i], 4, &dst_len[i]);
+			break;
+		case 7:
+			Trim(src[i], 4, &dst_len[i]);
+			break;
+		case 8:
+			Trim(src[i], 37, &dst_len[i]);
+			break;
+		case 9:
+			Trim(src[i], 4, &dst_len[i]);
+			break;
+		}
+
+		msgs.push_back(string(src[i], dst_len[i]));
+	}
+
+	for (string tmpbuff : msgs)
+	{
+		phead = 0;	//处理新包时，索引位置重置
+		ptail = 0;
+		index = 0;
+		remainbuff += tmpbuff;		//每次取新数据包，都会追加到上一包的遗留数据尾部
+									//遗留数据不能丢，很可能报文头被拆成两份了，本包的结尾存了半个报文头，下一个包的开始存了另外半个，所以这里要把当前的包存下来
+
+goon:
+		if (gotHead == false){
+			//findhead
+			index = remainbuff.find(head);
+			if (index == npos){//没找到，再取一包数据来处理
+				continue;
+			}else{	//找到头了
+				gotHead = true;
+				phead = index;	//记住头的位置
+				index = remainbuff.find(tail, phead);	//从头的位置开始找尾部
+				if (index == npos){//如果没找到,先把之前有用的都存下来，然后在读取一个包
+					remainbuff = remainbuff.substr(phead, remainbuff.length() - phead + tail_len);
+					continue;//重置索引并再读取一个包
+				}else{//如果找到了
+					ptail = index;	//记住尾的位置
+					if (ptail>phead){	//确认tail在head之后
+						string msg = remainbuff.substr(phead, ptail - phead);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
+						resultbuff += msg;
+						result.push_back(resultbuff);									//把结果放到队列中
+						resultbuff = "";
+						gotHead = false;
+						//用剩下的数据替换remainbuff，继续找头
+						remainbuff = remainbuff.substr(ptail + tail_len, remainbuff.length() - ptail - tail_len);
+						goto goon;
+					}else{
+
+					}
+				}
+			}
+		}
+		else{
+			//findtail
+			index = remainbuff.find(tail, phead);	//从头的位置开始找尾部
+			if (index == npos){//如果没找到,先把之前的都存下来，然后在读取一个包
+				remainbuff = remainbuff.substr(phead, remainbuff.length() - phead);
+				continue;
+			}
+			else{//如果找到了
+				ptail = index;	//记住尾的位置
+				if (ptail>phead){	//确认tail在head之后
+					string msg = remainbuff.substr(phead, ptail - phead + tail_len);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
+					resultbuff += msg;
+					result.push_back(resultbuff);									//把结果放到队列中
+					resultbuff = "";
+					gotHead = false;
+					//用剩下的数据替换remainbuff，继续找头
+					remainbuff = remainbuff.substr(ptail + tail_len, remainbuff.length() - ptail - tail_len);
+					goto goon;
+				}
+				else{
+
+				}
+			}
+		}
+	}
+
+
+	int j;
+	std::cin >> j;
+	return 0;
+}
+
