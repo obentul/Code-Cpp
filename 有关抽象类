@@ -1,0 +1,51 @@
+// ConsoleApplication13.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+
+#include <iostream>
+
+using namespace std;
+
+class A{
+public:
+	A(int i, char c) :m_i(i), m_c(c){
+		;
+	}
+	virtual void func()=0;
+
+private:
+	int m_i;
+	char m_c;
+};
+
+void A::func(){
+	cout << "A::func()";
+}
+
+class B :public A{
+public:
+	B(int i, char c) :A(i, c){
+		;
+	}
+	void func();
+};
+
+void B::func(){
+	cout << "B::func()";
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	//A a(1, 2);							//抽象类不能手动初始化
+
+	B* pb=new B(1,2);					//可以通过B的构造函数，让编译器在进行成员列表初始化时进行初始化
+
+	pb->func();
+
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
