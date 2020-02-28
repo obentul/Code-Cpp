@@ -1,0 +1,49 @@
+// ConsoleApplication13.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+
+#include <iostream>
+
+using namespace std;
+
+class A{
+public:
+	A()=default;
+	A(int i, char c) :m_i(i), m_c(c){
+		;
+	}
+	//virtual void func()=0;
+
+private:
+	int m_i;
+	char m_c;
+};
+
+//void A::func(){
+//	cout << "A::func()";
+//}
+
+class B :public A{
+public:
+	B()=default;
+	B(int i, char c) :A(i, c){
+		;
+	}
+	void func();
+};
+
+void B::func(){
+	cout << "B::func()";
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	A* pa = new B();
+	B* pb = dynamic_cast<B*>(pa);			//如果把A的虚函数 func 注释掉，则这里报错，因为A没有虚函数便没有虚函数表，而dynamic_cast依赖虚函数表
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
