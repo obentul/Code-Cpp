@@ -151,8 +151,7 @@ goon:
 				}else{//如果找到了
 					ptail = index;	//记住尾的位置
 					if (ptail>phead){	//确认tail在head之后
-						string msg = remainbuff.substr(phead, ptail - phead);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
-						resultbuff += msg;
+						resultbuff = remainbuff.substr(phead, ptail - phead);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
 						result.push_back(resultbuff);									//把结果放到队列中
 						resultbuff = "";
 						gotHead = false;
@@ -175,8 +174,7 @@ goon:
 			else{//如果找到了
 				ptail = index;	//记住尾的位置
 				if (ptail>phead){	//确认tail在head之后
-					string msg = remainbuff.substr(phead, ptail - phead + tail_len);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
-					resultbuff += msg;
+					resultbuff = remainbuff.substr(phead, ptail - phead + tail_len);		//这里没有把报文结束标志也放到目的string中，也可以放进去，不过写法为substr(phead, ptail - phead + 4)因为尾部标志是4个字节
 					result.push_back(resultbuff);									//把结果放到队列中
 					resultbuff = "";
 					gotHead = false;
