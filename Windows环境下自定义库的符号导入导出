@@ -1,0 +1,18 @@
+windows下的符号有 导入 和 导出之分。
+
+比如一个编译一个动态库项目，如果不希望外界使用它的某些接口，则不把这些函数的属性设置为导出属性即可。这个时候
+试图调用此函数的应用程序将无法查找到对应的符号，默认情况下，程序停止运行。
+
+在编写动态库工程时，在动态库工程中，需要在头文件中指明哪些函数是 导出的 __declspec(dllexport) ，然后在实现
+函数时，也要加上 __declspec(dllexport) 。
+
+在使用此动态库时，首先需要用到此动态库的头文件，此头文件和动态库的头文件需要有区别，因为此时需要指定相应的符号
+为导入符号 __declspec(dllimport) 。为了保证头文件的统一，一般使用一个宏来维护这种导入/导出的切换：
+
+#ifdef  HYBRID_SDK_DLL
+#define HYBRID_SDK_API  __declspec(dllexport) 
+#else 
+#define HYBRID_SDK_API  __declspec(dllimport) 
+#endif
+
+当此头文件在动态库工程中时，需要定义宏 HYBRID_SDK_DLL，而在调用程序工程中时，不需要定义宏 HYBRID_SDK_DLL
