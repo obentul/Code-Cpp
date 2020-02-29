@@ -1,0 +1,41 @@
+// ConsoleApplication13.cpp : 定义控制台应用程序的入口点。
+//
+
+#include "stdafx.h"
+
+#include <iostream>
+
+using namespace std;
+
+class A{
+public:
+	A()=default;
+	A(const A& a) = delete;		//拷贝构造被禁止，故func1(A a)无法被调用，但是func2(A& a)可以被调用，说明引用作为参数不会触发拷贝创建临时对象，这点和指针一样
+								//也从侧面印证了引用的底层实现是指针的说法
+
+public:
+	int m_i;
+	char m_c;
+};
+
+void func1(A a){
+	cout << "a.m_i" << a.m_i;
+}
+
+void func2(A& a){
+	cout << "a.m_i" << a.m_i;
+}
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	A a1;
+	func1(a1);		//无法编译
+	func2(a1);		//可以编译
+	
+
+	int j;
+	cin >> j;
+	return 0;
+}
+
