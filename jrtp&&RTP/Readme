@@ -1,0 +1,5 @@
+RTP协议栈标准定义：
+https://www.rfc-editor.org/rfc/rfc3550.pdf
+
+RTP的开源实现-jrtp：
+https://github.com/j0r1/JRTPLIB
